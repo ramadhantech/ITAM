@@ -1,0 +1,263 @@
+﻿@using ITAM.Constants
+@model ITAM.Models.InspectionReport
+
+@{
+    ViewData["Title"] = "Detail Laporan Inspeksi";
+
+    var status = Model?.ApprovalStatus ?? "";
+
+    var statusClass = status switch
+    {
+        InspectionStatus.Approved => "bg-success-subtle text-success border-success-subtle",
+        InspectionStatus.PendingUser => "bg-warning-subtle text-warning border-warning-subtle",
+        InspectionStatus.Rejected => "bg-danger-subtle text-danger border-danger-subtle",
+        _ => "bg-secondary-subtle text-secondary border-secondary-subtle"
+    };
+}
+
+@if (Model?.Approver != null)
+{
+    <div class="alert alert-success border-0 rounded-4">
+
+        <div class="fw-bold mb-1">Approved</div>
+
+        <div class="small">
+            Oleh: @Model.Approver?.Name
+        </div>
+
+        <div class="small">
+            @(Model.ApprovedAt.HasValue
+                    ? Model.ApprovedAt.Value.ToString("dd MMM yyyy HH:mm")
+                    : "-")
+    </div>
+
+    </div>
+}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <a asp-action="Index"
+               class="btn btn-light border rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+               style="width:45px;height:45px;">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+
+            <div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <h2 class="fw-bold mb-0 text-dark">
+                        @(Model?.ReportNumber ?? "-")
+                    </h2>
+
+                    <span class="badge border rounded-pill px-3 py-2 @statusClass">
+                        @(Model?.ApprovalStatus ?? "-")
+                    </span>
+                </div>
+
+                <p class="text-muted mb-0 mt-1">
+                    @(Model?.Title ?? "-")
+                </p>
+            </div>
+
+        </div>
+
+        <div>
+            <a asp-action="Index"
+               
+               target="_blank"
+               class="btn btn-outline-dark shadow-sm rounded-3 px-4">
+              Back
+            </a>
+        </div>
+
+    </div>
+
+    <div class="row g-4">
+
+        <!-- LEFT -->
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">Informasi Laporan</h5>
+
+                    <div class="mb-3">
+                        <label class="small text-muted">Tanggal Inspeksi</label>
+                        <div class="fw-semibold">
+                            @(Model?.InspectionDate.ToString("dd MMMM yyyy") ?? "-")
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small text-muted">Lokasi</label>
+                        <div class="fw-semibold">
+                            @(Model?.Location?.Name ?? "-")
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small text-muted">Dibuat Oleh</label>
+                        <div class="fw-semibold">
+                            @(Model?.Creator?.Name ?? "-")
+                        </div>
+                        <small class="text-muted">
+                            @(Model?.CreatedAt.ToString("dd MMM yyyy HH:mm") ?? "-")
+                        </small>
+                    </div>
+
+                    @if (Model?.AssignedToUser != null)
+                    {
+                        <div class="mb-3">
+                            <label class="small text-muted">PIC Approval</label>
+                            <div class="fw-semibold">
+                                @Model.AssignedToUser?.Name
+                            </div>
+                        </div>
+                    }
+
+                    @if (status == InspectionStatus.Approved)
+                    {
+                        <div class="alert alert-success border-0 rounded-4">
+                            <div class="fw-bold mb-1">Approved</div>
+
+                            <div class="small">
+                                Oleh: @(Model?.Approver?.Name ?? "-")
+                            </div>
+
+                            <div class="small">
+                                @(Model?.ApprovedAt.HasValue == true
+                                                            ? Model.ApprovedAt.Value.ToString("dd MMM yyyy HH:mm")
+                                                            : "-")
+                        </div>
+                    </div>
+                                        }
+
+                    <div class="mb-3">
+                        <label class="small text-muted">Catatan</label>
+                        <div class="bg-light border rounded-3 p-2 small">
+                            @(string.IsNullOrWhiteSpace(Model?.Notes)
+                                                        ? "Tidak ada catatan"
+                                                        : Model.Notes)
+                        </div>
+                    </div>
+
+                    @if (status == InspectionStatus.PendingUser)
+                    {
+                        <form asp-controller="Approval"
+                              asp-action="ApproveLocation"
+                              asp-route-id="@(Model?.Id ?? 0)"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-success w-100">
+                                Approve Location
+                            </button>
+
+                        </form>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-header bg-white border-0 p-4">
+                    <h5 class="fw-bold mb-1">Daftar Aset Inspeksi</h5>
+                    <small class="text-muted">Detail aset hasil inspeksi</small>
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th>Aset</th>
+                                <th>Subtype</th>
+                                <th class="text-center">Kondisi</th>
+                                <th class="text-center">Status</th>
+                                <th>Catatan</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @if (Model?.InspectionDetails == null || !Model.InspectionDetails.Any())
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        Tidak ada data
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var d in Model.InspectionDetails)
+                                {
+                                    var cond = (d?.Condition ?? "").ToLower() switch
+                                    {
+                                        "good" => "bg-success",
+                                        "warning" => "bg-warning text-dark",
+                                        "bad" => "bg-danger",
+                                        _ => "bg-secondary"
+                                    };
+
+                                    var st = (d?.Status ?? "").ToLower() switch
+                                    {
+                                        "active" => "bg-success-subtle text-success",
+                                        "repair" => "bg-warning-subtle text-warning",
+                                        "retired" => "bg-danger-subtle text-danger",
+                                        _ => "bg-light"
+                                    };
+
+                                    <tr>
+                                        <td>
+                                            <b>@d?.Asset?.AssetName</b><br />
+                                            <small>@d?.Asset?.AssetTag</small>
+                                        </td>
+
+                                        <td>@d?.Asset?.AssetSubtype</td>
+
+                                        <td class="text-center">
+                                            <span class="badge @cond">
+                                                @(d?.Condition ?? "-")
+                                            </span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="badge @st">
+                                                @(d?.Status ?? "-")
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            @(string.IsNullOrWhiteSpace(d?.Notes) ? "-" : d?.Notes)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

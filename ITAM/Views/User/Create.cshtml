@@ -1,0 +1,137 @@
+﻿@model ITAM.Dto.CreateUserDto
+
+@{
+    ViewData["Title"] = "Tambah Pengguna";
+}
+
+<div class="container mt-4" style="max-width: 800px;">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0 fw-bold text-dark">Tambah Pengguna Baru</h2>
+            <p class="text-muted small mb-0">
+                Daftarkan akun login atau penanggung jawab aset baru ke dalam sistem ITAM
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm rounded-3 shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Kembali
+        </a>
+    </div>
+
+    <!-- CARD -->
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-header bg-primary text-white py-3 border-0 rounded-top-4">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-person-plus-fill me-2"></i>
+                Form Registrasi User
+            </h5>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+
+                    <!-- LEFT -->
+                    <div class="col-md-6">
+
+                        <!-- NAME -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold small">Nama</label>
+                            <input asp-for="Name" class="form-control" placeholder="Nama lengkap" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- EMAIL -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-bold small">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="email@domain.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- PASSWORD -->
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label fw-bold small">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col-md-6">
+
+                        <!-- DEPARTMENT -->
+                        <div class="mb-3">
+                            <label asp-for="DepartmentId" class="form-label fw-bold small">
+                                Departemen
+                            </label>
+
+                            <select asp-for="DepartmentId"
+                                    class="form-select"
+                                    asp-items="ViewBag.Departments">
+
+                                <option value="">-- Pilih Departemen --</option>
+
+                            </select>
+
+                            <span asp-validation-for="DepartmentId"
+                                  class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+
+                            <select asp-for="LocationId"
+                                    asp-items="ViewBag.Locations"
+                                    class="form-select">
+
+                                <option value="">
+                                    -- Select Location --
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <!-- ROLE -->
+                        <div class="mb-3">
+                            <label asp-for="Role" class="form-label fw-bold small">Role</label>
+
+                            <select asp-for="Role" class="form-select">
+                                <option value="">-- Pilih Role --</option>
+                                <option value="Admin">Admin</option>
+                                <option value="User">User</option>
+                            </select>
+
+                            <span asp-validation-for="Role" class="text-danger small"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="text-end border-top pt-3 mt-3">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-save me-1"></i> Simpan
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

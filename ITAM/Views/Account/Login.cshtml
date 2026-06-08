@@ -1,0 +1,331 @@
+﻿@model ITAM.Dto.LoginDto
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login - IT Asset Management Pertamina</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet" />
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)), url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-wrapper {
+            min-height: 100vh;
+            backdrop-filter: blur(2px);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            border: none;
+            border-radius: 28px;
+            background: rgba(255,255,255,0.96);
+            box-shadow: 0 20px 50px rgba(0,0,0,.18);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
+            padding: 35px 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .logo-login {
+            height: 55px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .login-header h3 {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            margin-bottom: 0;
+            opacity: .9;
+            font-size: .95rem;
+        }
+
+        .login-body {
+            padding: 35px;
+        }
+
+        .form-label {
+            font-size: .9rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .input-group {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,.04);
+        }
+
+        .input-group-text {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-right: none;
+            padding-left: 18px;
+            padding-right: 14px;
+            color: #6c757d;
+        }
+
+        .form-control {
+            border: 1px solid #e9ecef;
+            border-left: none;
+            padding: 14px 15px;
+            font-size: .95rem;
+        }
+
+            .form-control:focus {
+                box-shadow: none;
+                border-color: #0d6efd;
+            }
+
+        .input-group:focus-within {
+            border-radius: 16px;
+            box-shadow: 0 0 0 4px rgba(13,110,253,.12);
+            transition: .2s ease;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #0052D4, #4364F7);
+            border: none;
+            border-radius: 16px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: .25s ease;
+            box-shadow: 0 10px 20px rgba(13,110,253,.2);
+        }
+
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 24px rgba(13,110,253,.28);
+            }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #6c757d;
+            font-size: .85rem;
+        }
+
+        .welcome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,.18);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: .85rem;
+            margin-bottom: 18px;
+        }
+
+        .alert {
+            border-radius: 14px;
+        }
+
+        @@media(max-width: 576px) {
+
+            body {
+                overflow: auto;
+            }
+
+            .login-card {
+                border-radius: 22px;
+            }
+
+            .login-body {
+                padding: 28px 24px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid login-wrapper d-flex align-items-center justify-content-center p-3">
+
+        <div class="login-card">
+
+            <!-- HEADER -->
+            <div class="login-header">
+
+                <div class="welcome-badge">
+                    <i class="bi bi-shield-lock"></i>
+                    Secure Access
+                </div>
+
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Pertamina_Logo.svg"
+                     class="logo-login"
+                     alt="Pertamina">
+
+                <h3>ITAM SYSTEM</h3>
+
+                <p>
+                    IT Asset Management & Inspection Report System
+                </p>
+
+            </div>
+
+            <!-- BODY -->
+            <div class="login-body">
+
+                <form asp-controller="Account"
+                      asp-action="Login"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <!-- ERROR -->
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger small border-0 shadow-sm mb-4">
+                        </div>
+                    }
+
+                    <!-- EMAIL -->
+                    <div class="mb-4">
+
+                        <label asp-for="Email" class="form-label">
+                            Email Perusahaan
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope-fill"></i>
+                            </span>
+
+                            <input asp-for="Email"
+                                   type="email"
+                                   class="form-control"
+                                   placeholder="nama@pertamina.com"
+                                   autocomplete="email"
+                                   required />
+
+                        </div>
+
+                        <span asp-validation-for="Email"
+                              class="text-danger small d-block mt-2">
+                        </span>
+
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="mb-4">
+
+                        <label asp-for="Password" class="form-label">
+                            Password
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-lock-fill"></i>
+                            </span>
+
+                            <input asp-for="Password"
+                                   type="password"
+                                   class="form-control"
+                                   placeholder="Masukkan password"
+                                   required />
+
+                        </div>
+
+                        <span asp-validation-for="Password"
+                              class="text-danger small d-block mt-2">
+                        </span>
+
+                    </div>
+
+                    <!-- REMEMBER -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="rememberMe">
+
+                            <label class="form-check-label small text-muted"
+                                   for="rememberMe">
+                                Remember me
+                            </label>
+
+                        </div>
+
+                        <a href="#"
+                           class="small text-decoration-none">
+                            Forgot Password?
+                        </a>
+
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button type="submit"
+                            class="btn btn-primary btn-login w-100">
+
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Login to System
+
+                    </button>
+
+                </form>
+
+                <!-- FOOTER -->
+                <div class="login-footer">
+
+                    <div class="mb-1">
+                        © 2026 PT Pertamina Patra Niaga
+                    </div>
+
+                    <div>
+                        IT Asset Management System
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

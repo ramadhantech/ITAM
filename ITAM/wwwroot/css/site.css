@@ -1,0 +1,115 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+
+
+body {
+    overflow-x: hidden;
+    background-color: #f8f9fa;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+    background: #212529;
+    color: #fff;
+    transition: all 0.3s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+
+    .sidebar .sidebar-header {
+        padding: 20px;
+        background: #1a1d20;
+        border-bottom: 1px solid #2c3034;
+    }
+
+    .sidebar ul p {
+        color: #6c757d;
+        padding: 10px 20px 5px 20px;
+        margin-bottom: 0;
+        font-size: 0.75rem;
+        text-uppercase: uppercase;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+
+    .sidebar ul.components {
+        padding: 10px 0;
+    }
+
+    .sidebar ul li a {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+        .sidebar ul li a:hover {
+            color: #fff;
+            background: #2c3034;
+        }
+
+    .sidebar ul li.active > a {
+        color: #fff;
+        background: #0d6efd;
+        font-weight: 500;
+    }
+
+    .sidebar ul li a i {
+        margin-right: 12px;
+        font-size: 1.1rem;
+    }
+
+.content-area {
+    width: calc(100% - 250px);
+    margin-left: 250px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 25px;
+}
+
+.top-navbar {
+    background: #fff;
+    padding: 15px 25px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+footer.custom-footer {
+    background: #fff;
+    padding: 15px 25px;
+    border-top: 1px solid #dee2e6;
+}

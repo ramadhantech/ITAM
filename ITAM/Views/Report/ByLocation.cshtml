@@ -1,0 +1,60 @@
+﻿@model List<ITAM.Models.Asset>
+
+@{
+    ViewData["Title"] = "Report Asset per Lokasi";
+}
+
+<div class="container mt-4">
+
+    <h3>Report Asset per Lokasi</h3>
+
+    <!-- FILTER DROPDOWN -->
+    <form method="get" asp-action="ByLocation" class="mb-3">
+
+        <select name="locationId"
+                class="form-select"
+                asp-items="ViewBag.Locations"
+                onchange="this.form.submit()">
+
+            <option value="">-- Pilih Lokasi --</option>
+
+        </select>
+
+    </form>
+
+    <!-- RESULT -->
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tag</th>
+                    <th>Nama</th>
+                    <th>Kategori</th>
+                    <th>Status</th>
+                    <th>Kondisi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.AssetTag</td>
+                        <td>@item.AssetName</td>
+                        <td>@item.Category?.Name</td>
+                        <td>@item.Status</td>
+                        <td>@item.Condition</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Silakan pilih lokasi terlebih dahulu
+        </div>
+    }
+
+</div>

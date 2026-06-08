@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">Dashboard IT Asset Management</h2>
+        <p class="text-muted">
+            Monitoring asset, inspection, dan aktivitas sistem.
+        </p>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Asset</h6>
+                    <h2 class="fw-bold text-primary">
+                        @ViewBag.TotalAsset
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Active</h6>
+                    <h2 class="fw-bold text-success">
+                        @ViewBag.ActiveAsset
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Repair</h6>
+                    <h2 class="fw-bold text-warning">
+                        @ViewBag.RepairAsset
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="text-muted">Retired</h6>
+                    <h2 class="fw-bold text-danger">
+                        @ViewBag.RetiredAsset
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    Asset per Status
+                </div>
+                <div class="card-body">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    Kondisi Asset
+                </div>
+                <div class="card-body">
+                    <canvas id="conditionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        const statusChart = new Chart(
+            document.getElementById('statusChart'),
+            {
+                type: 'bar',
+                data: {
+                    labels: ['Active', 'Repair', 'Retired'],
+                    datasets: [{
+                        data: [
+                            @ViewBag.ActiveAsset,
+                            @ViewBag.RepairAsset,
+                            @ViewBag.RetiredAsset
+                        ]
+                    }]
+                }
+            });
+
+        const conditionChart = new Chart(
+            document.getElementById('conditionChart'),
+            {
+                type: 'doughnut',
+                data: {
+                    labels: ['Good', 'Warning', 'Bad'],
+                    datasets: [{
+                        data: [
+                            @ViewBag.GoodAsset,
+                            @ViewBag.WarningAsset,
+                            @ViewBag.BadAsset
+                        ]
+                    }]
+                }
+            });
+
+    </script>
+}

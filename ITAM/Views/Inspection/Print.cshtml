@@ -1,0 +1,475 @@
+﻿@model ITAM.Models.InspectionReport
+
+@{
+    Layout = null;
+    ViewData["Title"] = $"Cetak {Model.ReportNumber}";
+
+    var hariIndo = Model.InspectionDate.ToString("dddd") switch
+    {
+        "Monday" => "Senin",
+        "Tuesday" => "Selasa",
+        "Wednesday" => "Rabu",
+        "Thursday" => "Kamis",
+        "Friday" => "Jumat",
+        "Saturday" => "Sabtu",
+        "Sunday" => "Minggu",
+        _ => Model.InspectionDate.ToString("dddd")
+    };
+
+    var bulanIndo = Model.InspectionDate.ToString("MMMM") switch
+    {
+        "January" => "Januari",
+        "February" => "Februari",
+        "March" => "Maret",
+        "April" => "April",
+        "May" => "Mei",
+        "June" => "Juni",
+        "July" => "Juli",
+        "August" => "Agustus",
+        "September" => "September",
+        "October" => "Oktober",
+        "November" => "November",
+        "December" => "Desember",
+        _ => Model.InspectionDate.ToString("MMMM")
+    };
+
+    var reportStructure = new List<(string Category, string[] Items)>
+    {
+        ("CCTV", new[] { "Indoor", "Outdoor", "PTZ", "Explosion" }),
+
+        ("HT", new[]
+        {
+            "Radio BS",
+            "Radio Mobil",
+            "Radio IS",
+            "Radio BS Marine",
+            "Radio IS Marine"
+        }),
+
+        ("Printer", new[]
+        {
+            "Colour",
+            "B/W"
+        }),
+
+        ("Device Mobile", new[]
+        {
+            "HP Explosion",
+            "Tablet Explosion",
+            "HP Satelite"
+        }),
+
+        ("Network", new[]
+        {
+            "Switch",
+            "Access Point",
+            "PABX",
+            "Tlp Analog",
+            "Tlp Digital"
+        }),
+
+        ("Komputer", new[]
+        {
+            "PC Desktop",
+            "Laptop Type 2",
+            "Laptop Type 3",
+            "Mini PC"
+        }),
+
+        ("Multimedia", new[]
+        {
+            "TV",
+            "Projector",
+            "Camera",
+            "LED",
+            "Speaker",
+            "Speaker Portable",
+            "Mic Wireless",
+            "Mic Meja",
+            "Mixer",
+            "Amplifier",
+            "Pointer"
+        })
+    };
+}
+
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <title>
+        @ViewData["Title"]
+    </title>
+
+    <style>
+
+        @@page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            color: #000;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            padding: 10mm;
+        }
+
+        .logo {
+            text-align: right;
+            margin-bottom: 5px;
+        }
+
+            .logo img {
+                height: 90px;
+            }
+
+        .title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .desc {
+            font-size: 11px;
+            line-height: 1.5;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .main-table th,
+        .main-table td {
+            border: 1px solid #000;
+            padding: 2px 4px;
+            font-size: 10px;
+            line-height: 1.1;
+        }
+
+        .main-table th {
+            text-align: center;
+            font-weight: normal;
+        }
+
+        .main-table td {
+            vertical-align: middle;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .signature {
+            width: 100%;
+            margin-top: 45px;
+        }
+
+            .signature td {
+                border: none;
+                text-align: center;
+                font-size: 11px;
+                vertical-align: top;
+            }
+
+        .signature-name {
+            margin-top: 70px;
+        }
+
+        .print-button {
+            text-align: center;
+            margin: 15px;
+        }
+
+        @@media print {
+
+            .no-print {
+                display: none;
+            }
+
+            .page {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="print-button no-print">
+        <button onclick="window.print()">
+            Print / PDF
+        </button>
+    </div>
+
+    <div class="page">
+
+        <!-- LOGO -->
+        <div class="logo">
+
+            <img src="@Url.Content("~/images/ptm-logo.png")"
+                 alt="Logo Pertamina" />
+
+        </div>
+
+        <!-- TITLE -->
+        <div class="title">
+            BERITA ACARA PEMERIKSAAN KONDISI SARANA DAN FASILITAS PERANGKAT IT
+        </div>
+
+        <!-- DESKRIPSI -->
+        <div class="desc">
+
+            Pada hari ini
+            <b>@hariIndo</b>
+            tanggal
+            <b>@Model.InspectionDate.ToString("dd")</b>
+            bulan
+            <b>@bulanIndo</b>
+            tahun
+            <b>@Model.InspectionDate.ToString("yyyy")</b>,
+            bertempat di Kantor Area
+            <b>@(Model.Location?.Name ?? "-")</b>
+            PT Pertamina Patra Niaga RJBB telah dilaksanakan
+            Pengecekan Sarana dan Fasilitas Perangkat IT oleh
+            SS ICT MOR 3 & PDSI dan Tim
+            <b>@(Model.Location?.Name ?? "-")</b>
+
+        </div>
+
+        <!-- TABLE -->
+        <table class="main-table">
+
+            <thead>
+
+                <tr>
+
+                    <th rowspan="2" style="width:40px;">
+                        No.
+                    </th>
+
+                    <th rowspan="2" colspan="2">
+                        Data Perangkat
+                    </th>
+
+                    <th rowspan="2" style="width:60px;">
+                        Jumlah
+                    </th>
+
+                    <th colspan="2" style="width:90px;">
+                        Kondisi
+                    </th>
+
+                    <th colspan="2" style="width:90px;">
+                        Status
+                    </th>
+
+                    <th rowspan="2" style="width:220px;">
+                        Keterangan
+                    </th>
+
+                </tr>
+
+                <tr>
+
+                    <th style="width:45px;">
+                        Baik
+                    </th>
+
+                    <th style="width:45px;">
+                        Rusak
+                    </th>
+
+                    <th style="width:45px;">
+                        Sewa
+                    </th>
+
+                    <th style="width:45px;">
+                        Asset
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @{
+                    int no = 1;
+                }
+
+                @foreach (var group in reportStructure)
+                {
+                    var totalItem = group.Items.Length;
+                    var firstRow = true;
+
+                    foreach (var item in group.Items)
+                    {
+                        var details = Model.InspectionDetails?
+                        .Where(x =>
+                        x.Asset != null &&
+                        x.Asset.Category != null &&
+                        x.Asset.Category.Name == group.Category &&
+                        x.Asset.AssetSubtype == item)
+                        .ToList()
+                        ?? new List<ITAM.Models.InspectionDetail>();
+
+                        var qty = details.Count;
+
+                        var good = details.Count(x =>
+                        x.Condition?.ToLower() == "good");
+
+                        var bad = details.Count(x =>
+                        x.Condition?.ToLower() == "bad");
+
+                        var sewa = details.Any(x =>
+                        x.Asset?.Status?.ToLower() == "sewa");
+
+                        var asset = details.Any(x =>
+                        x.Asset?.Status?.ToLower() == "asset");
+
+                        var note = string.Join(", ",
+                        details
+                        .Where(x => !string.IsNullOrWhiteSpace(x.Notes))
+                        .Select(x => x.Notes));
+
+                        <tr>
+
+                            <!-- NO -->
+                            <td class="text-center">
+                                @no
+                            </td>
+
+                            <!-- CATEGORY -->
+                            @if (firstRow)
+                            {
+                                <td rowspan="@totalItem"
+                                    class="text-center"
+                                    style="width:120px;">
+
+                                    @group.Category
+
+                                </td>
+
+                                firstRow = false;
+                            }
+
+                            <!-- ITEM -->
+                            <td style="width:170px;">
+                                @item
+                            </td>
+
+                            <!-- JUMLAH -->
+                            <td class="text-center">
+                                @(qty > 0 ? qty : "")
+                            </td>
+
+                            <!-- BAIK -->
+                            <td class="text-center">
+                                @(good > 0 ? "✔" : "")
+                            </td>
+
+                            <!-- RUSAK -->
+                            <td class="text-center">
+                                @(bad > 0 ? "✔" : "")
+                            </td>
+
+                            <!-- SEWA -->
+                            <td class="text-center">
+                                @(sewa ? "✔" : "")
+                            </td>
+
+                            <!-- ASSET -->
+                            <td class="text-center">
+                                @(asset ? "✔" : "")
+                            </td>
+
+                            <!-- KETERANGAN -->
+                            <td>
+                                @note
+                            </td>
+
+                        </tr>
+
+                        no++;
+                    }
+                }
+
+            </tbody>
+
+        </table>
+
+        <!-- FOOTER -->
+        <div class="desc" style="margin-top:15px;">
+
+            Demikianlah Berita Acara ini dibuat dengan sebenarnya
+            pada hari, tanggal dan tempat seperti tersebut di atas
+            untuk dapat digunakan sebagaimana mestinya.
+
+        </div>
+
+        <!-- SIGNATURE -->
+        <table class="signature">
+
+            <tr>
+
+                <td style="width:50%;">
+
+                    <div>
+                        SSC ICT MOR 3
+                    </div>
+
+                    <div class="signature-name">
+
+                        @(Model.Approver?.Name
+                                                ?? ".................................................")
+
+                    </div>
+
+
+                </td>
+
+                <td style="width:50%;">
+                    <div>
+                        User Lokasi
+                    </div>
+
+                    <div class="signature-name">
+
+                        @(Model.InspectionDetails?
+                                                .Select(d => d.Asset?.User)
+                                                .FirstOrDefault(u => u != null)?.Name
+                                                ?? ".................................................")
+
+                    </div>
+                  
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+﻿@model IEnumerable<ITAM.Models.Location>
+
+@{
+    ViewData["Title"] = "Lokasi Gudang";
+}
+
+<div class="container-fluid mt-4">
+    <!-- HEADER & TOMBOL TAMBAH -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Lokasi Gudang / Penempatan</h1>
+            <p class="text-muted small mb-0">Kelola daftar lokasi, gedung, ruang kerja, atau area penyimpanan aset IT</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-lg me-1"></i> Tambah Lokasi Baru
+        </a>
+    </div>
+
+    <!-- TAMPILAN UTAMA DALAM BENTUK CARD -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-uppercase fs-7 fw-bold border-bottom">
+                        <tr>
+                            <th class="ps-4" style="width: 75%;">Nama Lokasi / Tempat</th>
+                            <th class="text-center pe-4" style="width: 25%;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="2" class="text-center py-5 text-muted">
+                                    <i class="bi bi-geo-alt display-6 d-block mb-3 text-secondary"></i>
+                                    Belum ada data lokasi gudang yang terdaftar.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <!-- Nama Lokasi (Bold) dengan Ikon Peta Pin -->
+                                    <td class="ps-4 fw-semibold text-dark">
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded bg-danger-subtle text-danger d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px;">
+                                                <i class="bi bi-geo-alt-fill fs-5"></i>
+                                            </div>
+                                            <div>
+                                                @Html.DisplayFor(modelItem => item.Name)
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Tombol Aksi Sebaris -->
+                                    <td class="text-center pe-4">
+                                        <div class="btn-group gap-1" role="group">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="Ubah Data Lokasi">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+
+                                            <!-- FORM DELETE TANPA JAVASCRIPT: Langsung Refresh Kilat -->
+                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus lokasi @item.Name?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fs-7 {
+        font-size: 0.85rem !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #f8d7da !important;
+    }
+</style>

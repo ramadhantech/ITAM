@@ -1,0 +1,159 @@
+﻿@model IEnumerable<ITAM.Models.User>
+
+@{
+    ViewData["Title"] = "Manajemen User";
+}
+
+<div class="container-fluid mt-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Manajemen Pengguna</h1>
+            <p class="text-muted small mb-0">
+                Kelola hak akses, departemen, dan data penanggung jawab aset
+            </p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-primary shadow-sm">
+            <i class="bi bi-person-plus-fill me-1"></i> Tambah Pengguna
+        </a>
+    </div>
+
+    <!-- CARD -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0 text-nowrap">
+
+                    <thead class="table-light text-uppercase fs-7 fw-bold border-bottom">
+                        <tr>
+                            <th class="ps-4">Nama</th>
+                            <th>Email</th>
+                            <th>Departement</th>
+                            <th>Lokasi</th>
+                            <th class="text-center">Role</th>
+                            <th>Tanggal</th>
+                            <th class="text-center pe-4">Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model == null || !Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-people display-6 d-block mb-2"></i>
+                                    Belum ada data pengguna
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <!-- NAME -->
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center fw-bold me-3"
+                                                 style="width:38px;height:38px;">
+                                                @(string.IsNullOrEmpty(item.Name) ? "?" : item.Name.Substring(0, 1).ToUpper())
+                                            </div>
+
+                                            <div class="fw-bold">
+                                                @item.Name
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- EMAIL -->
+                                    <td class="text-muted">
+                                        <i class="bi bi-envelope me-1"></i>
+                                        @item.Email
+                                    </td>
+
+                                    <!-- DEPARTMENT FIX -->
+                                    <td>
+                                        <span class="badge bg-light text-dark border px-2 py-1.5">
+                                            <i class="bi bi-building text-secondary me-1"></i>
+                                            @(item.Department?.Name ?? "-")
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-light text-dark border px-2 py-1.5">
+                                            <i class="bi bi-building text-secondary me-1"></i>
+                                            @(item.Location?.Name ?? "-")
+                                        </span>
+                                    </td>
+
+                                    <!-- ROLE -->
+                                    <td class="text-center">
+                                        @{
+                                            var roleLower = item.Role?.ToLower();
+                                            var roleClass = roleLower == "admin"
+                                            ? "bg-danger-subtle text-danger border"
+                                            : "bg-info-subtle text-info border";
+                                        }
+
+                                        <span class="badge @roleClass px-3 py-1 text-uppercase">
+                                            @item.Role
+                                        </span>
+                                    </td>
+
+                                    <!-- DATE -->
+                                    <td>
+                                        <i class="bi bi-calendar me-1"></i>
+                                        @item.CreatedAt.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <!-- ACTION -->
+                                    <td class="text-center pe-4">
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+
+                                        <form asp-action="Delete"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Hapus user ini?')">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .fs-7 {
+        font-size: 0.85rem;
+    }
+</style>

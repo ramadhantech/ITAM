@@ -1,0 +1,144 @@
+﻿@model ITAM.Models.User
+
+@{
+    ViewData["Title"] = "Ubah Pengguna";
+
+    var roles = new List<string> { "Admin", "User" };
+}
+
+<div class="container mt-4" style="max-width: 800px;">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">Ubah Data Pengguna</h2>
+            <p class="text-muted small mb-0">
+                Perbarui informasi profil, departemen, atau hak akses akun
+            </p>
+        </div>
+
+        <a asp-action="Index" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Kembali
+        </a>
+    </div>
+
+    <!-- CARD -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-warning text-dark py-3">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-pencil-square me-2"></i>
+                Form Edit User
+            </h5>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form asp-action="Update" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+
+                    <!-- LEFT -->
+                    <div class="col-md-6">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nama</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <small class="text-muted">Kosongkan jika tidak diubah</small>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col-md-6">
+
+                        <!-- DEPARTMENT FIX -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Department</label>
+                            <select asp-for="DepartmentId"
+                                    class="form-select"
+                                    asp-items="ViewBag.Departments">
+
+                                <option value="">-- Pilih Department --</option>
+
+                            </select>
+
+                            <span asp-validation-for="DepartmentId"
+                                  class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+
+                            <select asp-for="LocationId"
+                                    asp-items="ViewBag.Locations"
+                                    class="form-select">
+
+                                <option value="">
+                                    -- Select Location --
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <!-- ROLE FIX -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Role</label>
+
+                            <select asp-for="Role" class="form-select">
+                                <option value="">-- Pilih Role --</option>
+                                @foreach (var r in roles)
+                                {
+                                    <option value="@r">@r</option>
+                                }
+                            </select>
+
+                            <span asp-validation-for="Role" class="text-danger small"></span>
+                        </div>
+
+                        <!-- CREATED AT (READ ONLY) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Created At</label>
+                            <input asp-for="CreatedAt" class="form-control bg-light" readonly />
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="text-end border-top pt-3 mt-3">
+
+                    <button type="submit" class="btn btn-warning fw-bold px-4">
+                        Simpan Perubahan
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

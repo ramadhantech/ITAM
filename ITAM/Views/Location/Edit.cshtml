@@ -1,0 +1,57 @@
+﻿@model ITAM.Models.Location
+
+@{
+    ViewData["Title"] = "Ubah Lokasi";
+}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <!-- HEADER & BUTTON KEMBALI -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">Ubah Data Lokasi</h2>
+            <p class="text-muted small mb-0">Perbarui nama gedung, ruang kerja, atau area penyimpanan aset</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Kembali
+        </a>
+    </div>
+
+    <!-- TAMPILAN UTAMA DALAM BENTUK CARD -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-warning text-dark py-3">
+            <h5 class="card-title mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Formulir Perubahan Lokasi</h5>
+        </div>
+        <div class="card-body p-4">
+            <!-- Form tetap mengarah ke action Update sesuai kode bawaan Anda -->
+            <form asp-action="Update" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+
+                <!-- ID Tersembunyi -->
+                <input type="hidden" asp-for="Id" />
+
+                <!-- INPUT FIELD NAMA LOKASI -->
+                <div class="mb-4">
+                    <label asp-for="Name" class="form-label fw-bold">Nama Lokasi / Tempat</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-geo-alt text-secondary"></i></span>
+                        <input asp-for="Name" class="form-control form-control-lg" placeholder="Contoh: Ruang Server Lt. 2, Gudang Utama" />
+                    </div>
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="d-grid border-top pt-3">
+                    <button type="submit" class="btn btn-warning btn-lg fw-bold text-dark">
+                        <i class="bi bi-save me-1"></i> Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

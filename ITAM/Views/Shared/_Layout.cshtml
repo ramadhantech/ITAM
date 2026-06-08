@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ITAM</title>
+    <!-- Link Bootstrap Icons untuk estetika ikon menu sidebar -->
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+
+</head>
+<body>
+    <div class="wrapper">
+        <!-- SIDEBAR MENU -->
+        <nav class="sidebar">
+            <div class="sidebar-header d-flex align-items-center">
+                <i class="bi bi-cpu-fill text-primary me-2 fs-4"></i>
+                <h4 class="mb-0 fw-bold tracking-wide">ITAM SYSTEM</h4>
+            </div>
+
+            <ul class="list-unstyled components">
+                <!-- MENU UTAMA (Bisa Diakses Semua Pihak) -->
+                <p>Dashboard</p>
+                <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
+                    <a asp-controller="Home" asp-action="Index"><i class="fa fa-chart-line"></i> Overview</a>
+                </li>
+
+                <!-- SINKRONISASI 1: PROTEKSI MENU MANAJEMEN INVENTARIS KHUSUS UNTUK ROLE ADMIN -->
+                @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <p>Inventaris</p>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Asset" ? "active" : "")">
+                        <a asp-controller="Asset" asp-action="Index"><i class="fa fa-laptop"></i> Data Asset</a>
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" ? "active" : "")">
+                        <a asp-controller="Category" asp-action="Index"><i class="fa fa-tag"></i> Category Asset</a>
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
+                        <a asp-controller="Department" asp-action="Index"><i class="fa fa-building"></i> Department</a>
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Location" ? "active" : "")">
+                        <a asp-controller="Location" asp-action="Index"><i class="fa fa-map-marker-alt"></i> Location </a>
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" ? "active" : "")">
+                        <a asp-controller="User" asp-action="Index"><i class="fa fa-users-cog"></i> Management User</a>
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" ? "active" : "")">
+                        <a asp-controller="Report" asp-action="ByLocation"><i class="fa fa-chart-bar"></i>Asset Report</a>
+                    </li>
+
+                    <p>Pemeriksaan</p>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Inspection" ? "active" : "")">
+                        <a asp-controller="Inspection" asp-action="Index">
+                            <i class="fa fa-clipboard-check"></i> Inspection
+                        </a>
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Approval" ? "active" : "")">
+                        <a asp-controller="Approval" asp-action="Index">
+                            <i class="fa fa-check-double"></i> Approval
+                        </a>
+                    </li>
+                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "AssetLog" ? "active" : "")">
+                        <a asp-controller="AssetLog" asp-action="Index"><i class="fa fa-history"></i> Log Activity</a>
+                    </li>
+                }
+
+                <!-- SINKRONISASI 2: MENU KHUSUS UNTUK ROLE USER (SSC ICT / USER LOKASI) -->
+                @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                }
+            </ul>
+        </nav>
+
+        <!-- KONTEN AREA -->
+        <div class="content-area">
+            <!-- TOP BAR -->
+            <div class="top-navbar d-flex justify-content-between align-items-center shadow-sm-bottom">
+                <span class="text-muted fw-semibold">
+                    <i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dd MMMM yyyy")
+                </span>
+
+                <div class="dropdown">
+                    <!-- SINKRONISASI 3: Mengubah teks nama profil agar dinamis membaca identitas akun login -->
+                    <button class="btn btn-light btn-sm dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1 text-primary"></i>
+                        @(User.Identity != null && User.Identity.IsAuthenticated ? User.Identity.Name : "Guest User")
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
+                        <li>
+                            <div class="px-3 py-1 small text-muted border-bottom mb-2">
+                                Role: <span class="fw-bold text-dark">@(User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value)</span>
+                            </div>
+                            </td>
+                        <li><a class="dropdown-item p-2 small text-dark text-decoration-none d-block rounded" href="#"><i class="bi bi-gear me-2"></i> Pengaturan</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <!-- SINKRONISASI 4: Mengunci tombol Keluar dengan Form POST Token agar sesi Cookie terhapus aman -->
+                            <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="dropdown-item p-2 small text-danger rounded border-0 bg-transparent w-100 text-start">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Keluar
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ISI KONTEN -->
+            <main role="main" class="main-content">
+                @RenderBody()
+            </main>
+
+            <!-- FOOTER BAWAH -->
+            <footer class="custom-footer text-muted small">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>&copy; 2026 - ITAM System - All Rights Reserved.</span>
+                    <a asp-controller="Home" asp-action="Privacy" class="text-decoration-none text-muted">Privacy Policy</a>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

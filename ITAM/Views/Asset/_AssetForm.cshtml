@@ -1,0 +1,104 @@
+﻿@model ITAM.Dto.CreateAssetDto
+
+<div class="row">
+    <!-- KOLOM KIRI -->
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label asp-for="AssetTag" class="form-label fw-bold"></label>
+            <input asp-for="AssetTag" class="form-control" />
+            <span asp-validation-for="AssetTag" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AssetName" class="form-label fw-bold"></label>
+            <input asp-for="AssetName" class="form-control" />
+            <span asp-validation-for="AssetName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CategoryId" class="form-label fw-bold"></label>
+            <select asp-for="CategoryId"
+                    id="categorySelect"
+                    class="form-select"
+                    asp-items="ViewBag.Categories">
+                <option value="">-- Pilih Kategori --</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AssetSubtype" class="form-label fw-bold"></label>
+            <select asp-for="AssetSubtype"
+                    id="subtypeSelect"
+                    class="form-select">
+                <option value="">-- Pilih Subtype --</option>
+            </select>
+            <span asp-validation-for="AssetSubtype" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LocationId" class="form-label fw-bold"></label>
+            <select asp-for="LocationId"
+                    id="locationSelect"
+                    class="form-select"
+                    asp-items="ViewBag.Locations">
+                <option value="">-- Pilih Lokasi --</option>
+            </select>
+            <span asp-validation-for="LocationId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- KOLOM KANAN -->
+    <div class="col-md-6">
+
+        <div class="mb-3">
+            <label asp-for="UserId" class="form-label fw-bold"></label>
+            <select asp-for="UserId"
+                    id="userSelect"
+                    class="form-select">
+                <option value="">-- Pilih User --</option>
+            </select>
+            <span asp-validation-for="UserId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AssetType" class="form-label fw-bold"></label>
+            <select asp-for="AssetType" class="form-select">
+                <option value="">-- Pilih Tipe --</option>
+                <option value="Buy">Buy</option>
+                <option value="Rent">Rent</option>
+            </select>
+            <span asp-validation-for="AssetType" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label fw-bold"></label>
+            <select asp-for="Status" class="form-select">
+                <option value="">-- Pilih Status --</option>
+                <option value="Active">Active</option>
+                <option value="Repair">Repair</option>
+                <option value="Retired">Retired</option>
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Condition" class="form-label fw-bold"></label>
+            <select asp-for="Condition" class="form-select">
+                <option value="">-- Pilih Kondisi --</option>
+                <option value="Good">Good</option>
+                <option value="Warning">Warning</option>
+                <option value="Bad">Bad</option>
+            </select>
+            <span asp-validation-for="Condition" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="mb-3">
+            <label asp-for="Note" class="form-label fw-bold"></label>
+            <textarea asp-for="Note" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
+    </div>
+</div>

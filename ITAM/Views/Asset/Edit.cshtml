@@ -1,0 +1,14 @@
+﻿@model ITAM.Dto.CreateAssetDto
+
+<form asp-action="Edit"
+      asp-route-id="@ViewContext.RouteData.Values["id"]"
+      method="post">
+
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="formMode" value="@ViewContext.RouteData.Values["action"]" />
+    <partial name="_AssetForm" model="Model" />
+
+    <button type="submit" class="btn btn-warning">
+        Simpan Perubahan
+    </button>
+</form>

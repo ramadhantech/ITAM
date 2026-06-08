@@ -1,0 +1,36 @@
+﻿@model List<ITAM.Models.InspectionReport>
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>No BA</th>
+            <th>Title</th>
+            <th>PIC</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            // Karena halaman ini HANYA menampilkan pending, langsung kunci ke warna kuning
+            var badgeClass = "bg-warning text-dark";
+
+            <tr>
+                <td>@item.ReportNumber</td>
+                <td>@item.Title</td>
+                <td>@(item.AssignedToUser?.Name ?? "-")</td>
+                <td>
+                    <span class="badge px-3 py-2 rounded-pill @badgeClass">
+                        @item.ApprovalStatus
+                    </span>
+                </td>
+                <td>
+                    <a asp-action="Detail" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                        Detail
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,146 @@
+﻿@model IEnumerable<ITAM.Dto.ResponseAssetLogDto>
+
+@{
+    ViewData["Title"] = "Log Aktivitas Asset";
+}
+
+<div class="container mt-4" style="max-width: 900px;">
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Log Aktivitas & Audit Trail</h1>
+            <p class="text-muted small mb-0">Riwayat jejak digital perubahan data, status, dan penempatan asset IT</p>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card shadow-sm border-0 text-center py-5 text-muted">
+            <div class="card-body">
+                <div class="fs-1 mb-2">⏳</div>
+                <h5>Belum ada catatan aktivitas</h5>
+                <p class="small mb-0">Semua perubahan pada data asset akan tercatat otomatis di sini.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="position-relative ps-3" style="border-left: 3px solid #dee2e6; margin-left: 20px;">
+
+            @foreach (var item in Model)
+            {
+                // Memecah teks gabungan menjadi array untuk dilooping di dalam kartu
+                var fields = item.FieldName.Split(" | ");
+                var olds = item.OldValue.Split(" | ");
+                var news = item.NewValue.Split(" | ");
+
+                <div class="position-relative mb-4">
+                    <!-- TITIK INDIKATOR TIMELINE -->
+                    <div class="position-absolute rounded-circle bg-white border border-primary d-flex align-items-center justify-content-center shadow-sm"
+                         style="width: 20px; height: 20px; left: -25px; top: 5px; z-index: 2;">
+                        <div class="rounded-circle bg-primary" style="width: 8px; height: 8px;"></div>
+                    </div>
+
+                    <!-- KARTU LOG KONTEN -->
+                    <div class="card shadow-sm border-0 transition-hover">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+
+                                <div class="flex-grow-1">
+                                    <!-- DESKRIPSI JUDUL TIMELINE -->
+                                    <div class="mb-2 text-dark">
+                                        <span class="fw-bold text-secondary">👤 @item.ChangedByUserName</span>
+                                        @if (item.FieldName.Contains("Registrasi"))
+                                        {
+                                            <span>mendaftarkan perangkat baru</span>
+                                        }
+                                        else if (item.FieldName.Contains("Penghapusan"))
+                                        {
+                                            <span class="text-danger">menghapus perangkat</span>
+                                        }
+                                        else
+                                        {
+                                            <span>memperbarui rincian perangkat</span>
+                                        }
+                                        <span class="fw-bold text-primary">💻 @item.AssetName</span>
+                                    </div>
+
+                                    <!-- KONDISI KONTEN DINAMIS -->
+                                    <div class="d-flex flex-column gap-2 mb-2">
+                                        @if (item.FieldName.Contains("Registrasi") || item.FieldName.Contains("Penghapusan"))
+                                        {
+                                            <!-- Tampilan Khusus Log Create Baru & Delete (Hanya berupa teks info tunggal) -->
+                                            <div class="p-2 bg-light rounded border-start border-info border-3 small">
+                                                <span class="text-dark fw-medium">@item.NewValue</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <!-- Tampilan Khusus Log Edit/Update (Menampilkan list perubahan field ke bawah) -->
+                                            @for (int i = 0; i < fields.Length; i++)
+                                            {
+                                                <div class="p-2 bg-light rounded border-start border-primary border-3 small d-flex align-items-center flex-wrap gap-2">
+                                                    <span class="badge bg-secondary text-uppercase fs-8">@fields[i].Trim()</span>
+                                                    <span class="text-muted">diubah dari</span>
+                                                    <span class="text-danger text-decoration-line-through bg-danger-subtle px-2 py-0.5 rounded fw-semibold">
+                                                        @(olds.Length > i ? olds[i].Trim() : "-")
+                                                    </span>
+                                                    <span class="text-muted">→</span>
+                                                    <span class="text-success bg-success-subtle px-2 py-0.5 rounded fw-bold">
+                                                        @(news.Length > i ? news[i].Trim() : "-")
+                                                    </span>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+
+                                    <!-- TANGGAL DAN WAKTU -->
+                                    <div class="text-muted small mt-2">
+                                        <span>📅 @item.ChangedAt.ToLocalTime().ToString("dd MMM yyyy, HH:mm:ss")</span>
+                                    </div>
+                                </div>
+
+                                <!-- TOMBOL AKSI CEPAT -->
+                                <div class="text-end">
+                                    <div class="btn-group gap-1">
+                                       
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-xs btn-outline-danger py-1 px-2 small" onclick="return confirm('Hapus log aktivitas ini?')">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    }
+</div>
+
+<style>
+    .fs-8 {
+        font-size: 0.72rem !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #f8d7da !important;
+    }
+
+    .bg-success-subtle {
+        background-color: #d1e7dd !important;
+    }
+
+    .transition-hover {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .transition-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.08) !important;
+        }
+</style>
