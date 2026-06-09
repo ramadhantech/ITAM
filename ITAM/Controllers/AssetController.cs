@@ -96,6 +96,7 @@ namespace ITAM.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var asset = await _assetService.GetByIdAsync(id);
+
             if (asset == null)
             {
                 return NotFound();
@@ -106,10 +107,7 @@ namespace ITAM.Controllers
                 AssetTag = asset.AssetTag,
                 AssetName = asset.AssetName,
                 CategoryId = asset.CategoryId,
-
-                // PERBAIKAN UTAMA: Ambil nilai Subtype lama dari database ke DTO form edit
                 AssetSubtype = asset.AssetSubtype,
-
                 LocationId = asset.LocationId,
                 UserId = asset.UserId,
                 AssetType = asset.AssetType,
@@ -118,9 +116,19 @@ namespace ITAM.Controllers
                 Note = asset.Note
             };
 
-            var users = await _userService.GetByLocationAsync(asset.LocationId);
-            ViewBag.Users = new SelectList(users, "Id", "Name", asset.UserId);
+            // isi category & location dulu
             await AmbilDataDropdown();
+
+            // BARU isi user
+            var users = await _userService.GetByLocationAsync(asset.LocationId);
+
+            ViewBag.Users = new SelectList(
+                users,
+                "Id",
+                "Name",
+                asset.UserId
+            );
+
             return View(dto);
         }
 

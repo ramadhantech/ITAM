@@ -30,9 +30,13 @@
             <label asp-for="AssetSubtype" class="form-label fw-bold"></label>
             <select asp-for="AssetSubtype"
                     id="subtypeSelect"
+                   
                     class="form-select">
                 <option value="">-- Pilih Subtype --</option>
             </select>
+            <input type="hidden"
+                   id="selectedSubtype"
+                   value="@Model?.AssetSubtype" />
             <span asp-validation-for="AssetSubtype" class="text-danger"></span>
         </div>
 
@@ -55,7 +59,8 @@
             <label asp-for="UserId" class="form-label fw-bold"></label>
             <select asp-for="UserId"
                     id="userSelect"
-                    class="form-select">
+                    class="form-select"
+                    asp-items="ViewBag.Users">
                 <option value="">-- Pilih User --</option>
             </select>
             <span asp-validation-for="UserId" class="text-danger"></span>

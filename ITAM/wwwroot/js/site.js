@@ -27,35 +27,93 @@ document.addEventListener("DOMContentLoaded", function () {
     // MIKIK ASSET MODUL: Event Listener Dropdown Kategori Halaman Create/Edit Asset
     // ------------------------------------------------------------------------
     const assetCategorySelect = document.getElementById('categorySelect');
+
     if (assetCategorySelect) {
+
         assetCategorySelect.addEventListener('change', function () {
-            const subtypeSelect = document.getElementById('subtypeSelect');
+
+            const subtypeSelect =
+                document.getElementById('subtypeSelect');
+
             if (!subtypeSelect) return;
 
-            const selectedText = this.options[this.selectedIndex].text.trim().toUpperCase();
-            subtypeSelect.innerHTML = '<option value="">-- Pilih Subtype Perangkat --</option>';
+            const selectedText =
+                this.options[this.selectedIndex]
+                    .text
+                    .trim()
+                    .toUpperCase();
+
+            subtypeSelect.innerHTML =
+                '<option value="">-- Pilih Subtype Perangkat --</option>';
 
             let mappedKey = "";
-            if (selectedText.includes("CCTV")) mappedKey = "3";
-            else if (selectedText.includes("HT") || selectedText.includes("TALKIE") || selectedText.includes("HANDY")) mappedKey = "7";
-            else if (selectedText.includes("PRINT")) mappedKey = "8";
-            else if (selectedText.includes("MOBILE") || selectedText.includes("DEVICE")) mappedKey = "9";
-            else if (selectedText.includes("NET")) mappedKey = "10";
-            else if (selectedText.includes("KOMP") || selectedText.includes("LAP")) mappedKey = "11";
-            else if (selectedText.includes("MULTI")) mappedKey = "12";
+
+            if (selectedText.includes("CCTV"))
+                mappedKey = "3";
+
+            else if (
+                selectedText.includes("HT") ||
+                selectedText.includes("TALKIE") ||
+                selectedText.includes("HANDY")
+            )
+                mappedKey = "7";
+
+            else if (selectedText.includes("PRINT"))
+                mappedKey = "8";
+
+            else if (
+                selectedText.includes("MOBILE") ||
+                selectedText.includes("DEVICE")
+            )
+                mappedKey = "9";
+
+            else if (selectedText.includes("NET"))
+                mappedKey = "10";
+
+            else if (
+                selectedText.includes("KOMP") ||
+                selectedText.includes("LAP")
+            )
+                mappedKey = "11";
+
+            else if (selectedText.includes("MULTI"))
+                mappedKey = "12";
 
             if (mappedKey && subtypeMappingGlobal[mappedKey]) {
+
                 subtypeSelect.disabled = false;
+
                 subtypeMappingGlobal[mappedKey].forEach(sub => {
-                    const option = document.createElement('option');
+
+                    const option =
+                        document.createElement('option');
+
                     option.value = sub;
                     option.textContent = sub;
+
                     subtypeSelect.appendChild(option);
+
                 });
-            } else {
+
+                // KHUSUS EDIT
+                const selectedSubtype =
+                    document.getElementById("selectedSubtype")?.value;
+
+                if (selectedSubtype) {
+                    subtypeSelect.value = selectedSubtype;
+                }
+            }
+            else {
                 subtypeSelect.disabled = true;
             }
         });
+
+        // AUTO LOAD SAAT EDIT
+        if (assetCategorySelect.value) {
+            assetCategorySelect.dispatchEvent(
+                new Event('change')
+            );
+        }
     }
 
     // ------------------------------------------------------------------------
