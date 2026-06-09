@@ -4,7 +4,7 @@ Aplikasi Asset Management berbasis ASP.NET Core MVC.
 
 ## Screenshot
 
-![Dashboard](https://raw.githubusercontent.com/ramadhantech/ITAM/master/wwwroot/images/itam.PNG)
+![Dashboard](ITAM/wwwroot/images/itam.PNG)
 
 ## Fitur
 
