@@ -5,6 +5,9 @@
         public int Id { get; set; }
         public string AssetTag { get; set; } = string.Empty;
         public string AssetName { get; set; } = string.Empty ;
+        public string? SerialNumber { get; set; }
+        public int? ContractId { get; set; }
+        public Contract? ContractName { get; set; } 
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
         public int LocationId { get; set; }

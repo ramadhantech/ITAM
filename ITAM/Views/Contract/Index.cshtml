@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ITAM.Models.Contract>
+
+@{
+    ViewData["Title"] = "Contract Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Contract Management</h2>
+
+    <a asp-action="Create" class="btn btn-primary">
+        Add Contract
+    </a>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Nomor Kontrak</th>
+            <th>Vendor</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th width="180">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+            int no = 1;
+        }
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@no</td>
+                <td>@item.ContractNumber</td>
+                <td>@item.Vendor.VendorName</td>
+                <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
+                <td>@item.EndDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id"
+                       class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
+
+                    <form asp-action="Delete"
+                          asp-route-id="@item.Id"
+                          method="post"
+                          class="d-inline">
+                        <button type="submit"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this contract?')">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+
+            no++;
+        }
+    </tbody>
+</table>

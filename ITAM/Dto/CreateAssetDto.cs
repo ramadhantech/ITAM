@@ -12,6 +12,9 @@ public class CreateAssetDto
     [StringLength(255, ErrorMessage = "Nama Asset tidak boleh lebih dari 255 karakter.")]
     public string AssetName { get; set; } = string.Empty;
 
+    public string? SerialNumber { get; set; }
+    public int? ContractId { get; set; }
+
     [Required(ErrorMessage = "Kategori wajib dipilih.")]
     [Range(1, int.MaxValue, ErrorMessage = "Kategori tidak valid.")]
     public int CategoryId { get; set; }

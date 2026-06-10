@@ -9,9 +9,7 @@
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-0 text-gray-800">
-                Manajemen Asset
-            </h1>
+            <h1 class="h3 mb-0 text-gray-800">Manajemen Asset</h1>
             <p class="text-muted small mb-0">
                 Kelola dan pantau seluruh aset inventaris perusahaan
             </p>
@@ -28,58 +26,31 @@
 
             <form asp-action="Index" method="get" class="row g-2 align-items-center">
 
-                <!-- SEARCH -->
                 <div class="col-md-4">
                     <div class="input-group">
-                        <span class="input-group-text bg-white">
-                            🔍
-                        </span>
+                        <span class="input-group-text bg-white">🔍</span>
                         <input type="text"
                                name="search"
                                class="form-control"
                                value="@ViewBag.CurrentSearch"
-                               placeholder="Cari Nama, Tag, Subtype, atau Tipe Asset..." />
+                               placeholder="Cari Asset..." />
                     </div>
                 </div>
 
-                <!-- CATEGORY -->
                 <div class="col-md-3">
-                    <select name="categoryId"
-                            class="form-select"
-                            asp-items="ViewBag.Categories">
-                        <option value="">
-                            -- Semua Kategori --
-                        </option>
+                    <select name="categoryId" class="form-select" asp-items="ViewBag.Categories">
+                        <option value="">-- Semua Kategori --</option>
                     </select>
                 </div>
 
-                <!-- LOCATION -->
                 <div class="col-md-3">
-                    <select name="locationId"
-                            class="form-select"
-                            asp-items="ViewBag.Locations">
-                        <option value="">
-                            -- Semua Lokasi --
-                        </option>
+                    <select name="locationId" class="form-select" asp-items="ViewBag.Locations">
+                        <option value="">-- Semua Lokasi --</option>
                     </select>
                 </div>
 
-                <!-- BUTTON -->
                 <div class="col-md-2 d-flex gap-2">
-                    <button type="submit"
-                            class="btn btn-primary w-100">
-                        Filter
-                    </button>
-
-                    @if (!string.IsNullOrEmpty(ViewBag.CurrentSearch)
-                                        || ViewBag.CurrentCategory != null
-                                        || ViewBag.CurrentLocation != null)
-                    {
-                        <a asp-action="Index"
-                           class="btn btn-outline-secondary">
-                            Reset
-                        </a>
-                    }
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
                 </div>
 
             </form>
@@ -97,27 +68,29 @@
 
                     <thead class="table-light text-uppercase fs-7 fw-bold border-bottom">
                         <tr>
-                            <th class="ps-4">Asset Tag</th>
+                            <th>Asset Tag</th>
                             <th>Nama Asset</th>
-                            <th>Subtype BA</th>
+                            <th>Serial Number</th>
+                            <th>Vendor</th>
+                            <th>Contract</th>
                             <th>Kategori</th>
                             <th>Lokasi</th>
                             <th>User</th>
                             <th>Tipe</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Kondisi</th>
-                            <th>Tanggal Dibuat</th>
-                            <th class="text-center pe-4">Aksi</th>
+                            <th>Tanggal</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
 
-                    <tbody class="border-top-0">
+                    <tbody>
 
                         @if (!Model.Any())
                         {
                             <tr>
-                                <td colspan="11" class="text-center py-5 text-muted">
-                                    Belum ada data asset yang cocok.
+                                <td colspan="13" class="text-center py-5 text-muted">
+                                    Belum ada data asset.
                                 </td>
                             </tr>
                         }
@@ -126,35 +99,35 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+
                                     <!-- ASSET TAG -->
-                                    <td class="ps-4 fw-semibold text-primary">
+                                    <td class="fw-bold text-primary">
                                         @item.AssetTag
                                     </td>
 
-                                    <!-- NAMA -->
+                                    <!-- NAME -->
                                     <td>
-                                        <div class="fw-bold text-dark">
-                                            @item.AssetName
-                                        </div>
-                                        @if (!string.IsNullOrEmpty(item.Note))
-                                        {
-                                            <span class="text-muted fs-7 d-block text-truncate" style="max-width:200px;">
-                                                @item.Note
-                                            </span>
-                                        }
+                                        <div class="fw-bold">@item.AssetName</div>
+                                        <div class="text-muted small">@item.Note</div>
                                     </td>
 
-                                    <!-- SUBTYPE BA -->
+                                    <!-- SERIAL NUMBER -->
+                                    <td class="font-monospace">
+                                        @(item.SerialNumber ?? "-")
+                                    </td>
+
+                                    <!-- VENDOR -->
                                     <td>
-                                        <span class="fw-semibold text-secondary">
-                                            @(string.IsNullOrEmpty(item.AssetSubtype) ? "-" : item.AssetSubtype)
-                                        </span>
+                                        @(item.ContractName?.Vendor?.VendorName ?? "-")
+                                    </td>
+
+                                    <!-- CONTRACT -->
+                                    <td>
+                                        @(item.ContractName?.ContractNumber ?? "-")
                                     </td>
 
                                     <!-- CATEGORY -->
-                                    <td>
-                                        @item.Category?.Name
-                                    </td>
+                                    <td>@item.Category?.Name</td>
 
                                     <!-- LOCATION -->
                                     <td>
@@ -164,69 +137,55 @@
                                     </td>
 
                                     <!-- USER -->
-                                    <td>
-                                        @(item.User?.Name ?? "-")
-                                    </td>
+                                    <td>@item.User?.Name</td>
 
                                     <!-- TYPE -->
                                     <td>
-                                        <!-- Menampilkan teks ramah pengguna berdasarkan value DB (Buy / Rent) -->
-                                        @(item.AssetType?.ToLower() == "buy" ? "Asset (Milik)" : (item.AssetType?.ToLower() == "rent" ? "Sewa" : item.AssetType))
+                                        @(item.AssetType == "Buy" ? "Asset (Milik)" : "Sewa")
                                     </td>
 
                                     <!-- STATUS -->
                                     <td class="text-center">
-                                        @{
-                                            var statusLower = item.Status?.ToLower() ?? "";
-                                            var statusClass = statusLower == "active" || statusLower == "deployed"
-                                            ? "bg-success-subtle text-success border border-success-subtle"
-                                            : "bg-warning-subtle text-warning border border-warning-subtle";
-                                        }
-                                        <span class="badge px-2 py-1 @statusClass text-uppercase fs-8">
+                                        <span class="badge bg-success">
                                             @item.Status
                                         </span>
                                     </td>
 
-                                    <!-- KONDISI (FIXED TERPOTONG & SINKRON VALUE) -->
+                                    <!-- CONDITION -->
                                     <td class="text-center">
-                                        @{
-                                            var conditionLower = item.Condition?.ToLower() ?? "";
-                                            var conditionClass = conditionLower == "good" || conditionLower == "baik"
-                                            ? "bg-success-subtle text-success border border-success-subtle"
-                                            : (conditionLower == "warning" || conditionLower == "rusak ringan"
-                                            ? "bg-warning-subtle text-warning border border-warning-subtle"
-                                            : "bg-danger-subtle text-danger border border-danger-subtle");
-                                        }
-                                        <span class="badge px-2 py-1 @conditionClass text-uppercase fs-8">
+                                        <span class="badge bg-warning text-dark">
                                             @item.Condition
                                         </span>
                                     </td>
 
-                                    <!-- TANGGAL DIBUAT -->
-                                    <td class="text-muted fs-7">
+                                    <!-- CREATED -->
+                                    <td>
                                         @item.CreatedAt.ToString("dd MMM yyyy")
                                     </td>
 
-                                    <!-- AKSI (FIXED TERPOTONG) -->
-                                    <td class="text-center pe-4">
-                                        <div class="d-flex justify-content-center gap-1">
-                                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary" title="Detail">
-                                               <i class="fa fa-eye"></i>
-                                            </a>
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Ubah">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Apakah Anda yakin ingin menghapus aset ini?');" style="display:inline;">
-                                                @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
-                                                   <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
+                                    <!-- ACTION -->
+                                    <td class="text-center">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Hapus asset ini?')">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
+
                                 </tr>
                             }
                         }
+
                     </tbody>
 
                 </table>

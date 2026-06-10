@@ -30,6 +30,8 @@ namespace ITAM.Services
                 .Include(a => a.Category)
                 .Include(a => a.Location)
                 .Include(a => a.User)
+                .Include(a => a.ContractName)
+                .ThenInclude(c => c.Vendor)
                 .Where(x => !x.IsDeleted);
 
             // SEARCH
@@ -80,9 +82,12 @@ namespace ITAM.Services
                 .Include(a => a.Category)
                 .Include(a => a.Location)
                 .Include(a => a.User)
+                .Include (a => a.ContractName)
                 .Where(x => x.Id == id && !x.IsDeleted)
                 .FirstOrDefaultAsync();
         }
+
+       
 
         /* =========================
            CREATE
@@ -110,6 +115,8 @@ namespace ITAM.Services
                 AssetTag = request.AssetTag,
                 AssetName = request.AssetName,
                 CategoryId = request.CategoryId,
+                ContractId = request.ContractId,
+                SerialNumber = request.SerialNumber,
 
                 // MAP FIELD BARU KE DATABASE
                 AssetSubtype = request.AssetSubtype,
@@ -235,13 +242,14 @@ namespace ITAM.Services
             data.AssetTag = request.AssetTag;
             data.AssetName = request.AssetName;
             data.CategoryId = request.CategoryId;
-
+            data.SerialNumber = request.SerialNumber;
             // SIMPAN PERUBAHAN SUBTYPE KE DATABASE MASTER
             data.AssetSubtype = request.AssetSubtype;
 
             data.LocationId = request.LocationId;
             data.UserId = request.UserId;
             data.AssetType = request.AssetType;
+            data.ContractId = request.ContractId;
             data.Status = request.Status;
             data.Condition = request.Condition;
             data.Note = request.Note;

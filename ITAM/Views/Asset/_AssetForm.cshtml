@@ -16,6 +16,27 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label fw-bold">Vendor</label>
+            <select id="VendorId" class="form-select" asp-items="ViewBag.Vendors">
+                <option value="">-- Pilih Vendor --</option>
+            </select>
+           
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SerialNumber" class="form-label fw-bold"></label>
+            <input asp-for="SerialNumber" class="form-control" placeholder="Serial Number dari device" />
+            <span asp-validation-for="SerialNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ContractId" class="form-label fw-bold"></label>
+            <select asp-for="ContractId" id="ContractId" class="form-select">
+                <option value="">-- Pilih Contract --</option>
+            </select>
+            <span asp-validation-for="ContractId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
             <label asp-for="CategoryId" class="form-label fw-bold"></label>
             <select asp-for="CategoryId"
                     id="categorySelect"
@@ -107,3 +128,4 @@
         </div>
     </div>
 </div>
+

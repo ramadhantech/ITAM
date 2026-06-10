@@ -1,4 +1,7 @@
 using ITAM.Data;
+using ITAM.Dto;
+using ITAM.Mapping;
+using ITAM.Models;
 using ITAM.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +16,10 @@ builder.Services.AddScoped<AssetLogService>();
 builder.Services.AddScoped<ServiceReport>();
 builder.Services.AddScoped<InspectionService>();
 builder.Services.AddScoped<ServiceDepartment>();
+builder.Services.AddScoped<VendorService>();
+builder.Services.AddScoped<ContractService>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -116,6 +116,62 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+
+    // Milik Contract Vendor
+ 
+    $('#VendorId').on('change', function () {
+
+        var vendorId = $(this).val();
+
+        var $contract = $('#ContractId');
+
+        // RESET DROPDOWN
+        $contract.empty();
+        $contract.append('<option value="">Loading...</option>');
+
+        // VALIDASI KOSONG
+        if (!vendorId) {
+            $contract.empty();
+            $contract.append('<option value="">-- Pilih Contract --</option>');
+            return;
+        }
+
+        // AJAX GET CONTRACT BY VENDOR
+        $.ajax({
+            url: '/Contract/GetByVendor',
+            type: 'GET',
+            data: { vendorId: vendorId },
+            success: function (data) {
+
+                $contract.empty();
+                $contract.append('<option value="">-- Pilih Contract --</option>');
+
+                // kalau kosong
+                if (!data || data.length === 0) {
+                    $contract.append('<option value="">Tidak ada contract</option>');
+                    return;
+                }
+
+                // isi data
+                $.each(data, function (i, item) {
+                    $contract.append(
+                        `<option value="${item.id}">
+                        ${item.contractNumber}
+                     </option>`
+                    );
+                });
+
+            },
+            error: function () {
+
+                $contract.empty();
+                $contract.append('<option value="">Error load contract</option>');
+
+                console.error("Gagal mengambil data contract");
+            }
+        });
+
+    });
     // ------------------------------------------------------------------------
     // MILIK ASSET MODUL : FILTER USER BERDASARKAN LOKASI
     // ------------------------------------------------------------------------

@@ -1,0 +1,14 @@
+﻿@model ITAM.Dto.VendorDto
+
+<div class="mb-3">
+    <label asp-for="VendorName" class="form-label fw-bold">Nama Vendor</label>
+
+    
+    <input asp-for="VendorName"
+           class="form-control" />
+
+    <span asp-validation-for="VendorName"
+          class="text-danger"></span>
+    
+
+</div>

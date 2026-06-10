@@ -23,46 +23,97 @@
             <ul class="list-unstyled components">
                 <!-- MENU UTAMA (Bisa Diakses Semua Pihak) -->
                 <p>Dashboard</p>
-                <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")">
-                    <a asp-controller="Home" asp-action="Index"><i class="fa fa-chart-line"></i> Overview</a>
+                <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")">
+                    <a asp-controller="Home" asp-action="Index">
+                        <i class="fa fa-chart-line"></i> Overview
+                    </a>
                 </li>
 
-                <!-- SINKRONISASI 1: PROTEKSI MENU MANAJEMEN INVENTARIS KHUSUS UNTUK ROLE ADMIN -->
                 @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     <p>Inventaris</p>
+
+                    <!-- Asset -->
                     <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Asset" ? "active" : "")">
-                        <a asp-controller="Asset" asp-action="Index"><i class="fa fa-laptop"></i> Data Asset</a>
+                        <a asp-controller="Asset" asp-action="Index">
+                            <i class="fa fa-laptop"></i> Data Asset
+                        </a>
                     </li>
-                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" ? "active" : "")">
-                        <a asp-controller="Category" asp-action="Index"><i class="fa fa-tag"></i> Category Asset</a>
+
+                    <!-- MASTER DATA DROPDOWN -->
+                    <li>
+                        <a href="#masterSubmenu" data-bs-toggle="collapse" class="dropdown-toggle">
+                            <i class="fa fa-database"></i> Master Data
+                        </a>
+
+                        <ul class="collapse list-unstyled ps-3" id="masterSubmenu">
+
+                            <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Category" ? "active" : "")">
+                                <a asp-controller="Category" asp-action="Index">
+                                    <i class="fa fa-tag"></i> Category
+                                </a>
+                            </li>
+
+                            <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
+                                <a asp-controller="Department" asp-action="Index">
+                                    <i class="fa fa-building"></i> Department
+                                </a>
+                            </li>
+
+                            <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Location" ? "active" : "")">
+                                <a asp-controller="Location" asp-action="Index">
+                                    <i class="fa fa-map-marker-alt"></i> Location
+                                </a>
+                            </li>
+
+                            <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" ? "active" : "")">
+                                <a asp-controller="User" asp-action="Index">
+                                    <i class="fa fa-users-cog"></i> User
+                                </a>
+                            </li>
+
+                            <!-- NEW: VENDOR -->
+                            <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Vendor" ? "active" : "")">
+                                <a asp-controller="Vendor" asp-action="Index">
+                                    <i class="fa fa-building"></i> Vendor
+                                </a>
+                            </li>
+
+                            <!-- NEW: CONTRACT -->
+                            <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Contract" ? "active" : "")">
+                                <a asp-controller="Contract" asp-action="Index">
+                                    <i class="fa fa-file-contract"></i> Contract
+                                </a>
+                            </li>
+
+                        </ul>
                     </li>
-                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Department" ? "active" : "")">
-                        <a asp-controller="Department" asp-action="Index"><i class="fa fa-building"></i> Department</a>
-                    </li>
-                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Location" ? "active" : "")">
-                        <a asp-controller="Location" asp-action="Index"><i class="fa fa-map-marker-alt"></i> Location </a>
-                    </li>
-                    <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "User" ? "active" : "")">
-                        <a asp-controller="User" asp-action="Index"><i class="fa fa-users-cog"></i> Management User</a>
-                    </li>
+
+                    <!-- REPORT -->
                     <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Report" ? "active" : "")">
-                        <a asp-controller="Report" asp-action="ByLocation"><i class="fa fa-chart-bar"></i>Asset Report</a>
+                        <a asp-controller="Report" asp-action="ByLocation">
+                            <i class="fa fa-chart-bar"></i> Asset Report
+                        </a>
                     </li>
 
                     <p>Pemeriksaan</p>
+
                     <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Inspection" ? "active" : "")">
                         <a asp-controller="Inspection" asp-action="Index">
                             <i class="fa fa-clipboard-check"></i> Inspection
                         </a>
                     </li>
+
                     <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "Approval" ? "active" : "")">
                         <a asp-controller="Approval" asp-action="Index">
                             <i class="fa fa-check-double"></i> Approval
                         </a>
                     </li>
+
                     <li class="@(ViewContext.RouteData.Values["Controller"]?.ToString() == "AssetLog" ? "active" : "")">
-                        <a asp-controller="AssetLog" asp-action="Index"><i class="fa fa-history"></i> Log Activity</a>
+                        <a asp-controller="AssetLog" asp-action="Index">
+                            <i class="fa fa-history"></i> Log Activity
+                        </a>
                     </li>
                 }
 

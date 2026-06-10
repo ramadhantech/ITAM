@@ -1,0 +1,25 @@
+﻿@model ITAM.Dto.ContractDto
+
+@{
+    ViewData["Title"] = "Create Contract";
+}
+
+<h2>Create Contract</h2>
+
+<form asp-action="Create" method="post">
+
+    <partial name="_Form" model="Model" />
+
+    <button type="submit" class="btn btn-success">
+        Save
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back
+    </a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

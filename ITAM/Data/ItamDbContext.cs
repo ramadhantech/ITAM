@@ -17,6 +17,8 @@ namespace ITAM.Data
        public DbSet<AssetHistory> AssetHistory { get; set; }
        public DbSet<InspectionReport> InspectionReport { get; set; }
       public DbSet<InspectionDetail> InspectionDetail { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<Contract> Contracts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -2,6 +2,7 @@
 using ITAM.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace ITAM.Controllers
@@ -12,17 +13,21 @@ namespace ITAM.Controllers
         private readonly CategoryService _categoryService;
         private readonly LocationService _locationService;
         private readonly UserService _userService;
+        private readonly VendorService _vendorService;
 
         public AssetController(
             AssetService assetService,
             CategoryService categoryService,
             LocationService locationService,
-            UserService userService)
+            UserService userService
+,
+            VendorService vendorService)
         {
             _assetService = assetService;
             _categoryService = categoryService;
             _locationService = locationService;
             _userService = userService;
+            _vendorService = vendorService;
         }
 
         /* =========================
@@ -108,6 +113,8 @@ namespace ITAM.Controllers
                 AssetName = asset.AssetName,
                 CategoryId = asset.CategoryId,
                 AssetSubtype = asset.AssetSubtype,
+                ContractId = asset.ContractId,
+                SerialNumber = asset.SerialNumber,
                 LocationId = asset.LocationId,
                 UserId = asset.UserId,
                 AssetType = asset.AssetType,
@@ -144,6 +151,7 @@ namespace ITAM.Controllers
                     x.Name
                 }));
         }
+
 
         /* =========================
            EDIT (POST)
@@ -199,9 +207,11 @@ namespace ITAM.Controllers
         {
             var kategori = await _categoryService.GetAllAsync();
             var lokasi = await _locationService.GetAllAsync();
+            var vendors = await _vendorService.GetAllAsync();
 
             ViewBag.Categories = new SelectList(kategori, "Id", "Name");
             ViewBag.Locations = new SelectList(lokasi, "Id", "Name");
+            ViewBag.Vendors = new SelectList(vendors, "Id", "VendorName");
 
             // Kosong dulu, nanti diisi AJAX berdasarkan lokasi
             ViewBag.Users = new SelectList(
