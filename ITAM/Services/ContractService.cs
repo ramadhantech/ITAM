@@ -41,7 +41,10 @@ public class ContractService
             .Select(x => new ContractDto
             {
                 Id = x.Id,
-                ContractNumber = x.ContractNumber
+                ContractNumber = x.ContractNumber,
+                VendorId = x.VendorId,
+                StartDate = x.StartDate,
+                EndDate = x.EndDate
             })
             .ToListAsync();
     }

@@ -5,7 +5,9 @@
       method="post">
 
     @Html.AntiForgeryToken()
-    <input type="hidden" id="formMode" value="@ViewContext.RouteData.Values["action"]" />
+    <input type="hidden"
+           id="selectedContractId"
+           value="@Model.ContractId" />
     <partial name="_AssetForm" model="Model" />
 
     <button type="submit" class="btn btn-warning">

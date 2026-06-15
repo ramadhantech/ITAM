@@ -114,6 +114,7 @@ namespace ITAM.Controllers
                 CategoryId = asset.CategoryId,
                 AssetSubtype = asset.AssetSubtype,
                 ContractId = asset.ContractId,
+                VendorId = asset.ContractName?.VendorId,
                 SerialNumber = asset.SerialNumber,
                 LocationId = asset.LocationId,
                 UserId = asset.UserId,

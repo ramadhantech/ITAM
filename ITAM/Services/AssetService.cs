@@ -68,6 +68,7 @@ namespace ITAM.Services
         {
             return await _context.Assets
                 .AsNoTracking()
+                .Include(x => x.ContractName)
                 .Where(x => x.Id == id && !x.IsDeleted)
                 .FirstOrDefaultAsync();
         }

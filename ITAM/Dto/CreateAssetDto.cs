@@ -13,6 +13,7 @@ public class CreateAssetDto
     public string AssetName { get; set; } = string.Empty;
 
     public string? SerialNumber { get; set; }
+    public int? VendorId { get; set; }
     public int? ContractId { get; set; }
 
     [Required(ErrorMessage = "Kategori wajib dipilih.")]

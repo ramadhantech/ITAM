@@ -1,31 +1,39 @@
 ﻿@model ITAM.Dto.CreateInspectionReportDto
 
 @{
-    ViewData["Title"] = "Create Inspection Report";
+    ViewData["Title"] = "Buat Berita Acara Pemeriksaan";
 }
 
 <div class="container-fluid py-4">
 
-    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-4 shadow-sm"></div>
+    <div asp-validation-summary="ModelOnly"
+         class="alert alert-danger rounded-4 shadow-sm">
+    </div>
 
     <!-- HEADER -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+
         <div>
             <h1 class="fw-bold text-dark mb-1">
                 <i class="bi bi-clipboard-check text-primary me-2"></i>
-                Create Inspection Report
+                Buat Berita Acara Pemeriksaan
             </h1>
+
             <p class="text-muted mb-0">
-                Form berita acara pemeriksaan fasilitas dan perangkat IT.
+                Formulir berita acara pemeriksaan aset dan perangkat teknologi informasi.
             </p>
         </div>
 
-        <a asp-action="Index" class="btn btn-light border rounded-3 px-4 mt-3 mt-md-0">
-            <i class="bi bi-arrow-left me-2"></i>Back
+        <a asp-action="Index"
+           class="btn btn-light border rounded-3 px-4 mt-3 mt-md-0">
+            <i class="bi bi-arrow-left me-2"></i>
+            Kembali
         </a>
+
     </div>
 
     <form asp-action="Create" method="post">
+
         @Html.AntiForgeryToken()
 
         <div class="row g-4">
@@ -33,47 +41,59 @@
             <!-- LEFT CONTENT -->
             <div class="col-lg-8">
 
-                <!-- GENERAL INFO -->
+                <!-- INFORMASI BERITA ACARA -->
                 <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
 
                     <div class="bg-primary bg-gradient text-white px-4 py-3">
+
                         <h5 class="mb-0 fw-semibold">
                             <i class="bi bi-file-earmark-text me-2"></i>
-                            Informasi Laporan
+                            Informasi Berita Acara
                         </h5>
+
                     </div>
 
                     <div class="card-body p-4">
 
-                        <!-- TITLE -->
+                        <!-- JUDUL -->
                         <div class="mb-4">
-                            <label asp-for="Title" class="form-label fw-semibold">
+
+                            <label asp-for="Title"
+                                   class="form-label fw-semibold">
                                 Judul Berita Acara
                             </label>
 
                             <div class="input-group">
+
                                 <span class="input-group-text bg-light border-0">
                                     <i class="bi bi-pencil-square"></i>
                                 </span>
 
                                 <input asp-for="Title"
                                        class="form-control border-0 bg-light py-3"
-                                       placeholder="Contoh : Pemeriksaan Asset IT Area Jakarta"
+                                       placeholder="Contoh : Berita Acara Pemeriksaan Aset IT Area Jakarta"
                                        required />
+
                             </div>
 
-                            <span asp-validation-for="Title" class="text-danger small"></span>
+                            <span asp-validation-for="Title"
+                                  class="text-danger small">
+                            </span>
+
                         </div>
 
-                        <!-- DATE + LOCATION -->
+                        <!-- TANGGAL & LOKASI -->
                         <div class="row g-3 mb-4">
 
                             <div class="col-md-6">
-                                <label asp-for="InspectionDate" class="form-label fw-semibold">
+
+                                <label asp-for="InspectionDate"
+                                       class="form-label fw-semibold">
                                     Tanggal Pemeriksaan
                                 </label>
 
                                 <div class="input-group">
+
                                     <span class="input-group-text bg-light border-0">
                                         <i class="bi bi-calendar-event"></i>
                                     </span>
@@ -83,17 +103,24 @@
                                            class="form-control border-0 bg-light py-3"
                                            value="@DateTime.UtcNow.ToString("yyyy-MM-dd")"
                                            required />
+
                                 </div>
 
-                                <span asp-validation-for="InspectionDate" class="text-danger small"></span>
+                                <span asp-validation-for="InspectionDate"
+                                      class="text-danger small">
+                                </span>
+
                             </div>
 
                             <div class="col-md-6">
-                                <label asp-for="LocationId" class="form-label fw-semibold">
-                                    Lokasi Area
+
+                                <label asp-for="LocationId"
+                                       class="form-label fw-semibold">
+                                    Lokasi Pemeriksaan
                                 </label>
 
                                 <div class="input-group">
+
                                     <span class="input-group-text bg-light border-0">
                                         <i class="bi bi-geo-alt"></i>
                                     </span>
@@ -103,33 +130,38 @@
                                             class="form-select border-0 bg-light py-3"
                                             required>
 
-                                        <option value="">-- Pilih Lokasi --</option>
+                                        <option value="">
+                                            -- Pilih Lokasi --
+                                        </option>
 
                                         @if (ViewBag.Locations != null)
                                         {
                                             @foreach (var item in ViewBag.Locations)
                                             {
-                                                <option value="@item.Id">@item.Name</option>
+                                                <option value="@item.Id">
+                                                    @item.Name
+                                                </option>
                                             }
                                         }
 
                                     </select>
+
                                 </div>
 
-                                <span asp-validation-for="LocationId" class="text-danger small"></span>
+                                <span asp-validation-for="LocationId"
+                                      class="text-danger small">
+                                </span>
+
                             </div>
 
                         </div>
 
-                        <!-- NOTES -->
-                        <!-- PIC APPROVAL -->
+                        <!-- PIC VERIFIKASI -->
                         <div class="mb-4">
 
                             <label asp-for="AssignedToUserId"
                                    class="form-label fw-semibold">
-
-                                PIC Approval
-
+                                PIC Verifikasi
                             </label>
 
                             <div class="input-group">
@@ -141,7 +173,11 @@
                                 <select asp-for="AssignedToUserId"
                                         id="approvalUserSelect"
                                         class="form-select border-0 bg-light py-3">
-                                    <option value="">-- Pilih PIC Approval --</option>
+
+                                    <option value="">
+                                        -- Pilih PIC Verifikasi --
+                                    </option>
+
                                 </select>
 
                             </div>
@@ -151,37 +187,42 @@
                             </span>
 
                         </div>
-                       
 
-
+                        <!-- CATATAN -->
                         <div>
-                            <label asp-for="Notes" class="form-label fw-semibold">
-                                Catatan Tambahan
+
+                            <label asp-for="Notes"
+                                   class="form-label fw-semibold">
+                                Catatan Pemeriksaan
                             </label>
 
                             <textarea asp-for="Notes"
                                       rows="4"
                                       class="form-control bg-light border-0"
-                                      placeholder="Tambahkan catatan pemeriksaan, kondisi umum, atau temuan lainnya..."></textarea>
+                                      placeholder="Tambahkan hasil pemeriksaan, temuan, rekomendasi perbaikan, atau informasi lainnya..."></textarea>
+
                         </div>
 
                     </div>
+
                 </div>
 
-                <!-- TABLE -->
+                <!-- DETAIL PEMERIKSAAN -->
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
 
                     <div class="bg-dark text-white px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
 
                         <div>
+
                             <h5 class="mb-1 fw-semibold">
                                 <i class="bi bi-pc-display-horizontal me-2"></i>
-                                Detail Asset Inspection
+                                Detail Hasil Pemeriksaan Aset
                             </h5>
 
                             <small class="text-light opacity-75">
-                                Tambahkan daftar perangkat yang diperiksa.
+                                Tambahkan daftar aset yang telah diperiksa.
                             </small>
+
                         </div>
 
                         <button type="button"
@@ -189,7 +230,8 @@
                                 onclick="addRow()">
 
                             <i class="bi bi-plus-circle me-2"></i>
-                            Tambah Asset
+                            Tambah Aset
+
                         </button>
 
                     </div>
@@ -198,24 +240,22 @@
 
                         <div class="table-responsive">
 
-                            <table class="table align-middle table-hover" id="detailTable">
+                            <table class="table table-hover align-middle"
+                                   id="detailTable">
 
                                 <thead class="table-light">
                                     <tr>
                                         <th>Kategori</th>
-                                        <th>Subtype</th>
-                                        <th>Asset</th>
+                                        <th>Subkategori</th>
+                                        <th>Nama Aset</th>
                                         <th>Kondisi</th>
                                         <th>Status</th>
-                                        <th>Keterangan</th>
+                                        <th>Catatan</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
 
                                 <tbody id="detailBody">
-
-                                    <!-- Dynamic Row -->
-
                                 </tbody>
 
                             </table>
@@ -231,68 +271,75 @@
             <!-- RIGHT SIDEBAR -->
             <div class="col-lg-4">
 
-                <!-- CONTROL PANEL -->
                 <div class="card border-0 shadow-sm rounded-4 sticky-top"
-                     style="top: 20px;">
+                     style="top:20px;">
 
                     <div class="bg-success bg-gradient text-white px-4 py-3">
+
                         <h5 class="mb-0 fw-semibold">
                             <i class="bi bi-check2-square me-2"></i>
-                            Action Panel
+                            Ringkasan Status
                         </h5>
+
                     </div>
 
                     <div class="card-body p-4">
 
-                        <!-- STATUS -->
                         <div class="bg-light rounded-4 p-3 mb-4">
 
                             <div class="d-flex align-items-center mb-2">
-                                <div class="bg-warning rounded-circle me-2"
-                                     style="width:10px;height:10px;"></div>
 
-                                <span class="fw-semibold">Status Draft</span>
+                                <div class="bg-warning rounded-circle me-2"
+                                     style="width:10px;height:10px;">
+                                </div>
+
+                                <span class="fw-semibold">
+                                    Menunggu Verifikasi
+                                </span>
+
                             </div>
 
                             <small class="text-muted">
-                                Laporan akan disimpan sebagai pending verification.
+                                Berita acara akan disimpan dan menunggu proses verifikasi.
                             </small>
 
                         </div>
 
-                        <!-- BUTTON -->
                         <button type="submit"
                                 class="btn btn-primary w-100 py-3 rounded-3 fw-semibold shadow-sm mb-3">
 
                             <i class="bi bi-save2 me-2"></i>
-                            Simpan Inspection Report
+                            Simpan Berita Acara
 
                         </button>
 
                         <a asp-action="Index"
                            class="btn btn-outline-secondary w-100 py-3 rounded-3">
 
-                            Cancel
+                            Batal
 
                         </a>
 
-                        <!-- INFO -->
                         <div class="border-top mt-4 pt-3">
 
                             <div class="d-flex align-items-start mb-3">
+
                                 <i class="bi bi-shield-check text-success me-2 mt-1"></i>
 
                                 <small class="text-muted">
-                                    Data laporan tersimpan aman di sistem.
+                                    Data pemeriksaan akan tersimpan secara aman di dalam sistem.
                                 </small>
+
                             </div>
 
                             <div class="d-flex align-items-start">
+
                                 <i class="bi bi-info-circle text-primary me-2 mt-1"></i>
 
                                 <small class="text-muted">
-                                    Pastikan seluruh asset sudah diperiksa sebelum submit.
+                                    Pastikan seluruh aset telah diperiksa sebelum berita acara disimpan.
                                 </small>
+
                             </div>
 
                         </div>
@@ -306,6 +353,7 @@
         </div>
 
     </form>
+
 </div>
 
 @section Scripts {

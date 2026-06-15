@@ -1,68 +1,78 @@
 ﻿@model ITAM.Dto.CreateAssetDto
 
 <div class="row">
+
     <!-- KOLOM KIRI -->
     <div class="col-md-6">
+
         <div class="mb-3">
-            <label asp-for="AssetTag" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Asset Tag</label>
             <input asp-for="AssetTag" class="form-control" />
             <span asp-validation-for="AssetTag" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="AssetName" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Nama Aset</label>
             <input asp-for="AssetName" class="form-control" />
             <span asp-validation-for="AssetName" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label class="form-label fw-bold">Vendor</label>
-            <select id="VendorId" class="form-select" asp-items="ViewBag.Vendors">
+            <label class="form-label fw-bold">Vendor / Penyedia</label>
+            <select asp-for="VendorId"
+                    id="VendorId"
+                    class="form-select"
+                    asp-items="ViewBag.Vendors">
                 <option value="">-- Pilih Vendor --</option>
             </select>
-           
         </div>
 
         <div class="mb-3">
-            <label asp-for="SerialNumber" class="form-label fw-bold"></label>
-            <input asp-for="SerialNumber" class="form-control" placeholder="Serial Number dari device" />
+            <label class="form-label fw-bold">Nomor Seri</label>
+            <input asp-for="SerialNumber"
+                   class="form-control"
+                   placeholder="Masukkan nomor seri perangkat" />
             <span asp-validation-for="SerialNumber" class="text-danger"></span>
         </div>
+
         <div class="mb-3">
-            <label asp-for="ContractId" class="form-label fw-bold"></label>
-            <select asp-for="ContractId" id="ContractId" class="form-select">
-                <option value="">-- Pilih Contract --</option>
+            <label class="form-label fw-bold">Nomor Kontrak</label>
+            <select asp-for="ContractId"
+                    id="ContractId"
+                    class="form-select">
+                <option value="">-- Pilih Kontrak --</option>
             </select>
             <span asp-validation-for="ContractId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="CategoryId" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Kategori Aset</label>
             <select asp-for="CategoryId"
                     id="categorySelect"
                     class="form-select"
                     asp-items="ViewBag.Categories">
-                <option value="">-- Pilih Kategori --</option>
+                <option value="">-- Pilih Kategori Aset --</option>
             </select>
             <span asp-validation-for="CategoryId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="AssetSubtype" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Sub Kategori</label>
             <select asp-for="AssetSubtype"
                     id="subtypeSelect"
-                   
                     class="form-select">
-                <option value="">-- Pilih Subtype --</option>
+                <option value="">-- Pilih Sub Kategori --</option>
             </select>
+
             <input type="hidden"
                    id="selectedSubtype"
                    value="@Model?.AssetSubtype" />
+
             <span asp-validation-for="AssetSubtype" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="LocationId" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Lokasi Penempatan</label>
             <select asp-for="LocationId"
                     id="locationSelect"
                     class="form-select"
@@ -71,61 +81,66 @@
             </select>
             <span asp-validation-for="LocationId" class="text-danger"></span>
         </div>
+
     </div>
 
     <!-- KOLOM KANAN -->
     <div class="col-md-6">
 
         <div class="mb-3">
-            <label asp-for="UserId" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Pengguna (PIC)</label>
             <select asp-for="UserId"
                     id="userSelect"
                     class="form-select"
                     asp-items="ViewBag.Users">
-                <option value="">-- Pilih User --</option>
+                <option value="">-- Pilih Pengguna --</option>
             </select>
             <span asp-validation-for="UserId" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="AssetType" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Metode Pengadaan</label>
             <select asp-for="AssetType" class="form-select">
-                <option value="">-- Pilih Tipe --</option>
-                <option value="Buy">Buy</option>
-                <option value="Rent">Rent</option>
+                <option value="">-- Pilih Metode Pengadaan --</option>
+                <option value="Buy">Pembelian</option>
+                <option value="Rent">Sewa</option>
             </select>
             <span asp-validation-for="AssetType" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Status" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Status Aset</label>
             <select asp-for="Status" class="form-select">
-                <option value="">-- Pilih Status --</option>
-                <option value="Active">Active</option>
-                <option value="Repair">Repair</option>
-                <option value="Retired">Retired</option>
+                <option value="">-- Pilih Status Aset --</option>
+                <option value="Active">Aktif</option>
+                <option value="Repair">Perbaikan</option>
+                <option value="Retired">Pensiun Aset</option>
             </select>
             <span asp-validation-for="Status" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Condition" class="form-label fw-bold"></label>
+            <label class="form-label fw-bold">Kondisi Aset</label>
             <select asp-for="Condition" class="form-select">
-                <option value="">-- Pilih Kondisi --</option>
-                <option value="Good">Good</option>
-                <option value="Warning">Warning</option>
-                <option value="Bad">Bad</option>
+                <option value="">-- Pilih Kondisi Aset --</option>
+                <option value="Good">Baik</option>
+                <option value="Warning">Perlu Perhatian</option>
+                <option value="Bad">Rusak</option>
             </select>
             <span asp-validation-for="Condition" class="text-danger"></span>
         </div>
+
     </div>
 
     <div class="col-12">
         <div class="mb-3">
-            <label asp-for="Note" class="form-label fw-bold"></label>
-            <textarea asp-for="Note" class="form-control" rows="3"></textarea>
+            <label class="form-label fw-bold">Catatan</label>
+            <textarea asp-for="Note"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Tambahkan catatan jika diperlukan"></textarea>
             <span asp-validation-for="Note" class="text-danger"></span>
         </div>
     </div>
-</div>
 
+</div>
