@@ -62,11 +62,21 @@ namespace ITAM.Services
         // =========================
         public async Task<InspectionReport> CreateAsync(CreateInspectionReportDto dto, int createdBy)
         {
+
             if (dto.Details == null || !dto.Details.Any())
                 throw new Exception("Detail tidak boleh kosong");
 
-            if (dto.AssignedToUserId == null)
-                throw new Exception("PIC wajib dipilih");
+            var mor3 = await _context.Locations
+      .FirstOrDefaultAsync(x => x.Name.Trim().ToUpper() == "MOR III");
+
+            if (mor3 == null)
+                throw new Exception("Lokasi MOR III tidak ditemukan");
+
+            var approver = await _context.Users
+             .FirstOrDefaultAsync(x => x.LocationId == mor3.Id && x.Role == "Admin");
+
+            if (approver == null)
+                throw new Exception("User approver MOR III tidak ditemukan");
 
             var report = new InspectionReport
             {
@@ -76,7 +86,7 @@ namespace ITAM.Services
                 Title = dto.Title,
                 InspectionDate = DateTime.SpecifyKind(dto.InspectionDate, DateTimeKind.Utc),
                 LocationId = dto.LocationId,
-                AssignedToUserId = dto.AssignedToUserId,
+                AssignedToUserId = approver.Id,
                 Notes = dto.Notes,
                 CreatedBy = createdBy,
 
