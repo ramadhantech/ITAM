@@ -20,7 +20,7 @@ namespace ITAM.Controllers
            INDEX
         ========================= */
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -28,10 +28,25 @@ namespace ITAM.Controllers
                 return Unauthorized();
 
             int currentUserId = int.Parse(userId);
-            var data = await _service.GetPendingApprovalAsync(currentUserId);
 
-            return View(data);
+            int pageSize = 10;
+
+            var allData = await _service.GetPendingApprovalAsync(currentUserId);
+
+            var totalItems = allData.Count;
+
+            var items = allData
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+
+            return View(items);
         }
+
 
 
         /* =========================

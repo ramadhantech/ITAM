@@ -27,33 +27,25 @@ namespace ITAM.Controllers
            INDEX GET
         ========================= */
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var user = await _service.GetAllAsync();
-            return View(user);
-        }
+            int pageSize = 5;
 
-        /* =========================
-           CREATE GET
-        ========================= */
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            ViewBag.Roles = new List<string> { "Admin", "User" };
+            var allData = await _service.GetAllAsync();
 
-            ViewBag.Departments = new SelectList(
-                await _departmentService.GetAllAsync(),
-                "Id",
-                "Name"
-            );
+            var totalItems = allData.Count;
 
-            ViewBag.Locations = new SelectList(
-                await _locationService.GetAllAsync(),
-                "Id",
-                "Name"
-            );
+            var items = allData
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-            return View();
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            return View(items);
         }
 
         /* =========================

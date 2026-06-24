@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ITAM.Models.Asset>
+﻿@model ITAM.Dto.PagedResultDto<ITAM.Models.Asset>
 
 @{
     ViewData["Title"] = "Daftar Asset";
@@ -64,9 +64,9 @@
 
             <div class="table-responsive">
 
-                <table class="table table-hover align-middle mb-0 text-nowrap">
+                <table class="table table-hover align-middle mb-0 text-nowrap table-sm">
 
-                    <thead class="table-light text-uppercase fs-7 fw-bold border-bottom">
+                    <thead class="table-light text-uppercase fw-bold border-bottom">
                         <tr>
                             <th>Asset Tag</th>
                             <th>Nama Asset</th>
@@ -86,7 +86,7 @@
 
                     <tbody>
 
-                        @if (!Model.Any())
+                        @if (!Model.Items.Any())
                         {
                             <tr>
                                 <td colspan="13" class="text-center py-5 text-muted">
@@ -96,74 +96,61 @@
                         }
                         else
                         {
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.Items)
                             {
                                 <tr>
 
-                                    <!-- ASSET TAG -->
                                     <td class="fw-bold text-primary">
                                         @item.AssetTag
                                     </td>
 
-                                    <!-- NAME -->
                                     <td>
                                         <div class="fw-bold">@item.AssetName</div>
                                         <div class="text-muted small">@item.Note</div>
                                     </td>
 
-                                    <!-- SERIAL NUMBER -->
                                     <td class="font-monospace">
                                         @(item.SerialNumber ?? "-")
                                     </td>
 
-                                    <!-- VENDOR -->
                                     <td>
                                         @(item.ContractName?.Vendor?.VendorName ?? "-")
                                     </td>
 
-                                    <!-- CONTRACT -->
                                     <td>
                                         @(item.ContractName?.ContractNumber ?? "-")
                                     </td>
 
-                                    <!-- CATEGORY -->
                                     <td>@item.Category?.Name</td>
 
-                                    <!-- LOCATION -->
                                     <td>
                                         <span class="badge bg-light text-dark border">
                                             @item.Location?.Name
                                         </span>
                                     </td>
 
-                                    <!-- USER -->
                                     <td>@item.User?.Name</td>
 
-                                    <!-- TYPE -->
                                     <td>
                                         @(item.AssetType == "Buy" ? "Asset (Milik)" : "Sewa")
                                     </td>
 
-                                    <!-- STATUS -->
                                     <td class="text-center">
                                         <span class="badge bg-success">
                                             @item.Status
                                         </span>
                                     </td>
 
-                                    <!-- CONDITION -->
                                     <td class="text-center">
                                         <span class="badge bg-warning text-dark">
                                             @item.Condition
                                         </span>
                                     </td>
 
-                                    <!-- CREATED -->
                                     <td>
                                         @item.CreatedAt.ToString("dd MMM yyyy")
                                     </td>
 
-                                    <!-- ACTION -->
                                     <td class="text-center">
                                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">
                                             <i class="fa fa-eye"></i>
@@ -194,5 +181,45 @@
 
         </div>
     </div>
+
+    <!-- PAGINATION -->
+    <nav class="mt-3">
+        <ul class="pagination justify-content-end">
+
+            <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(Model.Page - 1)"
+                   asp-route-search="@ViewBag.CurrentSearch"
+                   asp-route-categoryId="@ViewBag.CurrentCategory"
+                   asp-route-locationId="@ViewBag.CurrentLocation">
+                    Previous
+                </a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.Page ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-search="@ViewBag.CurrentSearch"
+                       asp-route-categoryId="@ViewBag.CurrentCategory"
+                       asp-route-locationId="@ViewBag.CurrentLocation">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(Model.Page + 1)">
+                    Next
+                </a>
+            </li>
+
+        </ul>
+    </nav>
 
 </div>

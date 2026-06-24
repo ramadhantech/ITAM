@@ -13,13 +13,34 @@ namespace ITAM.Controllers
             _service = service;
         }
 
-        public async Task<IActionResult> Index()
+        // =========================
+        // INDEX + PAGINATION
+        // =========================
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var data = await _service.GetAllAsync();
-            return View(data);
+            int pageSize = 10;
+
+            var allData = await _service.GetAllAsync();
+
+            var totalItems = allData.Count;
+
+            var items = allData
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            return View(items);
         }
 
-        public async Task<IActionResult> Create()
+        // =========================
+        // CREATE
+        // =========================
+        public IActionResult Create()
         {
             return View();
         }
@@ -28,33 +49,30 @@ namespace ITAM.Controllers
         public async Task<IActionResult> Create(VendorDto req)
         {
             if (!ModelState.IsValid)
-            {
                 return View(req);
-            }
 
             await _service.CreateAsync(req);
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Edit(int Id)
+        // =========================
+        // EDIT
+        // =========================
+        public async Task<IActionResult> Edit(int id)
         {
-            var data = await _service.GetByIdAsync(Id);
+            var data = await _service.GetByIdAsync(id);
 
             if (data == null)
                 return NotFound();
 
-            // Sederhana sekali, karena 'data' sudah otomatis bertipe VendorDto
             return View(data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(VendorDto req)
         {
-            // Perbaikan Logika: Jika model TIDAK valid, kembalikan ke form beserta error-nya
             if (!ModelState.IsValid)
-            {
                 return View(req);
-            }
 
             var result = await _service.UpdateAsync(req);
 
@@ -64,6 +82,9 @@ namespace ITAM.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // =========================
+        // DELETE
+        // =========================
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {

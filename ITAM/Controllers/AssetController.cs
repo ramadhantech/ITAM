@@ -1,12 +1,14 @@
 ﻿using ITAM.Dto;
+using ITAM.Models;
 using ITAM.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace ITAM.Controllers
 {
+    [Authorize]
     public class AssetController : Controller
     {
         private readonly AssetService _assetService;
@@ -19,8 +21,7 @@ namespace ITAM.Controllers
             AssetService assetService,
             CategoryService categoryService,
             LocationService locationService,
-            UserService userService
-,
+            UserService userService,
             VendorService vendorService)
         {
             _assetService = assetService;
@@ -31,15 +32,33 @@ namespace ITAM.Controllers
         }
 
         /* =========================
-           INDEX
+           INDEX + PAGINATION FIX
         ========================= */
         [HttpGet]
         public async Task<IActionResult> Index(
             string search,
             int? categoryId,
-            int? locationId)
+            int? locationId,
+            int page = 1)
         {
-            var data = await _assetService.GetAllAsync(search, categoryId, locationId);
+            int pageSize = 3;
+
+            var allData = await _assetService.GetAllAsync(search, categoryId, locationId);
+
+            var totalItems = allData.Count;
+
+            var items = allData
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var result = new PagedResultDto<Asset>
+            {
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = totalItems
+            };
 
             var kategori = await _categoryService.GetAllAsync();
             ViewBag.Categories = new SelectList(kategori, "Id", "Name", categoryId);
@@ -51,7 +70,7 @@ namespace ITAM.Controllers
             ViewBag.CurrentCategory = categoryId;
             ViewBag.CurrentLocation = locationId;
 
-            return View(data);
+            return View(result);
         }
 
         /* =========================
@@ -63,15 +82,13 @@ namespace ITAM.Controllers
             var asset = await _assetService.GetDetailsAsync(id);
 
             if (asset == null)
-            {
                 return NotFound();
-            }
 
             return View(asset);
         }
 
         /* =========================
-           CREATE (GET)
+           CREATE
         ========================= */
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -80,22 +97,20 @@ namespace ITAM.Controllers
             return View();
         }
 
-        /* =========================
-           CREATE (POST)
-        ========================= */
         [HttpPost]
-        [ValidateAntiForgeryToken] // Rekomendasi keamanan tambahan
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateAssetDto dto)
         {
             var currentUserId = int.Parse(
-                User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
             await _assetService.CreateAsync(dto, currentUserId);
+
             return RedirectToAction(nameof(Index));
         }
 
         /* =========================
-           EDIT (GET)
+           EDIT GET
         ========================= */
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -103,9 +118,7 @@ namespace ITAM.Controllers
             var asset = await _assetService.GetByIdAsync(id);
 
             if (asset == null)
-            {
                 return NotFound();
-            }
 
             var dto = new CreateAssetDto
             {
@@ -124,18 +137,11 @@ namespace ITAM.Controllers
                 Note = asset.Note
             };
 
-            // isi category & location dulu
             await AmbilDataDropdown();
 
-            // BARU isi user
             var users = await _userService.GetByLocationAsync(asset.LocationId);
 
-            ViewBag.Users = new SelectList(
-                users,
-                "Id",
-                "Name",
-                asset.UserId
-            );
+            ViewBag.Users = new SelectList(users, "Id", "Name", asset.UserId);
 
             return View(dto);
         }
@@ -145,64 +151,54 @@ namespace ITAM.Controllers
         {
             var users = await _userService.GetByLocationAsync(locationId);
 
-            return Json(
-                users.Select(x => new
-                {
-                    x.Id,
-                    x.Name
-                }));
+            return Json(users.Select(x => new
+            {
+                x.Id,
+                x.Name
+            }));
         }
 
-
         /* =========================
-           EDIT (POST)
+           EDIT POST
         ========================= */
         [HttpPost]
-        [ValidateAntiForgeryToken] // Rekomendasi keamanan tambahan
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CreateAssetDto request)
         {
             if (!ModelState.IsValid)
             {
                 await AmbilDataDropdown();
-
-                RouteData.Values["id"] = id;
                 return View(request);
             }
 
             var currentUserId = int.Parse(
                 User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            var sukses = await _assetService.UpdateAsync(
-                id,
-                request,
-                currentUserId);
+            var sukses = await _assetService.UpdateAsync(id, request, currentUserId);
 
             if (!sukses)
-            {
                 return NotFound();
-            }
 
             return RedirectToAction(nameof(Index));
         }
 
         /* =========================
-           DELETE (POST)
+           DELETE
         ========================= */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _assetService.DeleteAsync(id);
-            
+
             if (!result)
-            {
                 return NotFound();
-            }
+
             return RedirectToAction(nameof(Index));
         }
 
         /* =========================
-           HELPER DROPDOWN
+           DROPDOWN HELPER
         ========================= */
         private async Task AmbilDataDropdown()
         {
@@ -214,11 +210,7 @@ namespace ITAM.Controllers
             ViewBag.Locations = new SelectList(lokasi, "Id", "Name");
             ViewBag.Vendors = new SelectList(vendors, "Id", "VendorName");
 
-            // Kosong dulu, nanti diisi AJAX berdasarkan lokasi
-            ViewBag.Users = new SelectList(
-                new List<SelectListItem>(),
-                "Value",
-                "Text");
+            ViewBag.Users = new SelectList(new List<SelectListItem>(), "Value", "Text");
         }
     }
 }

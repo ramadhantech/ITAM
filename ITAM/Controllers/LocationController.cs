@@ -13,15 +13,37 @@ namespace ITAM.Controllers
             _service = service;
         }
 
+        // =========================
+        // INDEX + PAGINATION
+        // =========================
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-           var data = await _service.GetAllAsync();
-            return View(data);
+            int pageSize = 10;
+
+            var allData = await _service.GetAllAsync();
+
+            var totalItems = allData.Count;
+
+            var items = allData
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // pakai ViewBag biar simpel (tanpa ViewModel)
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            return View(items);
         }
 
+        // =========================
+        // CREATE
+        // =========================
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -29,22 +51,24 @@ namespace ITAM.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Location request)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return View(request);
 
             await _service.CreateAsync(request);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
+        // =========================
+        // EDIT
+        // =========================
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var data = await _service.GetById(id);
 
             if (data == null)
-            {
                 return NotFound();
-            }
+
             return View(data);
         }
 
@@ -52,14 +76,16 @@ namespace ITAM.Controllers
         public async Task<IActionResult> Update(int id, Location request)
         {
             await _service.UpdateAsync(id, request);
-            return Redirect(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
-       
-        
+
+        // =========================
+        // DELETE
+        // =========================
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-           await _service.DeleteAsync(id);
+            await _service.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

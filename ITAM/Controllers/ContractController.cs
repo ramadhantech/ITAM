@@ -16,10 +16,25 @@ public class ContractController : Controller
         _vendorService = vendorService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1)
     {
-        var data = await _contractService.GetAllAsync();
-        return View(data);
+        int pageSize = 10;
+
+        var allData = await _contractService.GetAllAsync();
+
+        var totalItems = allData.Count;
+
+        var items = allData
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        ViewBag.Page = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.TotalItems = totalItems;
+        ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+        return View(items);
     }
 
     [HttpGet]

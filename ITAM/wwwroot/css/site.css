@@ -1,28 +1,43 @@
+/* =========================
+   BASE FONT SETTING
+   ========================= */
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 15px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* focus bootstrap */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-
+/* =========================
+   BODY FIX (IMPORTANT)
+   ========================= */
 
 body {
+    min-height: 100vh;
     overflow-x: hidden;
-    background-color: #f8f9fa;
+    overflow-y: auto;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 0;
 }
+
+/* =========================
+   WRAPPER LAYOUT
+   ========================= */
 
 .wrapper {
     display: flex;
@@ -30,9 +45,13 @@ body {
     align-items: stretch;
 }
 
+/* =========================
+   SIDEBAR
+   ========================= */
+
 .sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 230px;
+    max-width: 230px;
     min-height: 100vh;
     background: #212529;
     color: #fff;
@@ -44,28 +63,28 @@ body {
 }
 
     .sidebar .sidebar-header {
-        padding: 20px;
+        padding: 18px;
         background: #1a1d20;
         border-bottom: 1px solid #2c3034;
     }
 
     .sidebar ul p {
         color: #6c757d;
-        padding: 10px 20px 5px 20px;
+        padding: 10px 18px 5px;
         margin-bottom: 0;
-        font-size: 0.75rem;
-        text-uppercase: uppercase;
+        font-size: 0.7rem;
+        text-transform: uppercase;
         font-weight: bold;
         letter-spacing: 0.5px;
     }
 
     .sidebar ul.components {
-        padding: 10px 0;
+        padding: 8px 0;
     }
 
     .sidebar ul li a {
-        padding: 12px 20px;
-        font-size: 0.95rem;
+        padding: 10px 18px;
+        font-size: 0.9rem;
         display: flex;
         align-items: center;
         color: rgba(255, 255, 255, 0.75);
@@ -85,31 +104,161 @@ body {
     }
 
     .sidebar ul li a i {
-        margin-right: 12px;
-        font-size: 1.1rem;
+        margin-right: 10px;
+        font-size: 1rem;
     }
 
+/* =========================
+   CONTENT AREA
+   ========================= */
+
 .content-area {
-    width: calc(100% - 250px);
-    margin-left: 250px;
+    width: calc(100% - 230px);
+    margin-left: 230px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-size: 0.9rem;
 }
 
 .main-content {
     flex: 1;
-    padding: 25px;
+    padding: 20px;
 }
+
+/* =========================
+   TOP NAV + FOOTER
+   ========================= */
 
 .top-navbar {
     background: #fff;
-    padding: 15px 25px;
+    padding: 12px 20px;
     border-bottom: 1px solid #dee2e6;
 }
 
 footer.custom-footer {
     background: #fff;
-    padding: 15px 25px;
+    padding: 12px 20px;
     border-top: 1px solid #dee2e6;
+}
+
+/* =========================
+   TABLE GLOBAL (IMPORTANT)
+   ========================= */
+
+.table {
+    font-size: 0.82rem;
+}
+
+    .table td,
+    .table th {
+        padding: 0.45rem 0.6rem;
+        vertical-align: middle;
+    }
+
+/* =========================
+   TYPOGRAPHY SMALLER
+   ========================= */
+
+h1, .h1 {
+    font-size: 1.6rem;
+}
+
+h2, .h2 {
+    font-size: 1.3rem;
+}
+
+h3, .h3 {
+    font-size: 1.15rem;
+}
+
+.btn {
+    font-size: 0.85rem;
+}
+
+/* form lebih compact */
+.form-control,
+.form-select {
+    font-size: 0.85rem;
+    height: 38px;
+}
+
+/* badge kecil */
+.badge {
+    font-size: 0.72rem;
+}
+
+/* =========================
+   LOGIN PAGE (TETAP AMAN)
+   ========================= */
+
+.login-page {
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT */
+.left-panel {
+    flex: 1;
+    background: url('/images/bg.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+    .left-panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,.10);
+    }
+
+.branding {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* RIGHT */
+.right-panel {
+    width: 500px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* input login */
+.input-group {
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.input-group-text {
+    background: #f8f9fa;
+}
+
+.input-group:focus-within {
+    box-shadow: 0 0 0 4px rgba(33,64,154,.15);
+}
+
+/* responsive login */
+@media (max-width: 992px) {
+    .left-panel {
+        display: none;
+    }
+
+    .right-panel {
+        width: 100%;
+    }
 }
