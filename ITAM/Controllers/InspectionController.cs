@@ -34,10 +34,10 @@ namespace ITAM.Controllers
            INDEX
         ========================================================== */
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
             var userIdClaim =
-        User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim))
             {
@@ -46,11 +46,22 @@ namespace ITAM.Controllers
 
             int currentUserId = int.Parse(userIdClaim);
 
-            var reports =
-                await _service.GetAllAsync(
-                    currentUserId);
+            int pageSize = 10;
 
-            return View(reports);
+            var allData = await _service.GetAllAsync(currentUserId);
+
+            var totalItems = allData.Count;
+
+            var items = allData
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+
+            return View(items);
         }
 
         /* ==========================================================
