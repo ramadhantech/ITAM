@@ -15,7 +15,7 @@ namespace ITAM.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ByLocation(
+        public async Task<IActionResult> Index(
             int? locationId,
             int? categoryId,
             int page = 1)
