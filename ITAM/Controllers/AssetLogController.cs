@@ -14,10 +14,24 @@ namespace ITAM.Controllers
 
         // 1. HALAMAN UTAMA (Daftar Riwayat Perubahan/Audit Log Seluruh Asset)
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
+            int pageSize = 10;
+
             var logs = await _logService.GetAllAsync();
-            return View(logs);
+
+            var totalItems = logs.Count();
+
+            var pagedData = logs
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+
+            return View(pagedData);
         }
 
         // 2. HALAMAN UTAMA KUSTOM (Daftar Log Khusus Berdasarkan ID Asset Tertentu)
